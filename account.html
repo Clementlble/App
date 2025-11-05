@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Suivi Nutrition — Mon Compte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#f6f8fb; --card:#fff; --accent:#15b79a; --accent-2:#0f9e85; --muted:#6c7780; --radius:12px }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+    body{background:linear-gradient(180deg,var(--bg),#eef4f8);color:#132a31;padding-bottom:80px}
+    .app{max-width:900px;margin:14px auto;padding:12px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
+    .logo img{ width:50px; height:50px; display:block ; border-radius:10px;}
+    h1{font-size:17px;margin:0}
+    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(17,36,45,0.05);border:1px solid rgba(15,25,30,0.03)}
+    form{display:flex;flex-direction:column;gap:10px}
+    label{font-size:13px;color:var(--muted)}
+    input,select{padding:12px;border-radius:10px;border:1px solid rgba(15,25,30,0.06);font-size:14px}
+    .row{display:flex;gap:10px}
+    .row .col{flex:1;min-width:0}
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(15,25,30,0.04)}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+    .stat{padding:10px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfffd);text-align:center}
+    .stat small{display:block;color:var(--muted)}
+    .stat strong{display:block;margin-top:6px;font-size:16px}
+    .hint{font-size:13px;color:var(--muted)}
+    .recommend-box{margin-top:8px;padding:10px;border-radius:10px;background:#f7fff9;border:1px solid rgba(15,25,30,0.03)}
+    .small-muted{font-size:13px;color:var(--muted)}
+    @media (max-width:760px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .row{flex-direction:column}
+      input,select{width:100%}
+    }
+    .status-line{margin-top:8px;font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="app" role="application" aria-label=" Nutrition — Compte">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true" title=" Nutrition">
+          <img src="https://firebasestorage.googleapis.com/v0/b/justfit-bed28.firebasestorage.app/o/Eatwise.png?alt=media&token=5d011753-d532-4de1-a720-71b1d8046acd" alt="Logo SN" />
+        </div>
+        <div>
+          <h1>Mon Compte</h1>
+          <p class="hint">Profile, objectifs et totaux de macronutriments</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <a href="index.html" class="btn ghost" style="text-decoration:none;color:inherit">Retour</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2 style="margin:0 0 8px 0">Informations personnelles</h2>
+        <form id="accountForm">
+          <label for="name">Nom</label>
+          <input id="name" type="text" />
+
+          <label for="email">Email</label>
+          <input id="email" type="email" />
+
+          <div class="row">
+            <div class="col">
+              <label for="weight">Poids (kg)</label>
+              <input id="weight" type="number" min="0" step="0.1" />
+            </div>
+            <div class="col">
+              <label for="height">Taille (cm)</label>
+              <input id="height" type="number" min="0" step="0.1" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label for="age">Âge</label>
+              <input id="age" type="number" min="0" />
+            </div>
+            <div class="col">
+              <label for="sex">Sexe</label>
+              <select id="sex"><option value="other">Autre</option><option value="male">Homme</option><option value="female">Femme</option></select>
+            </div>
+          </div>
+
+          <!-- Goals first -->
+          <div class="row">
+            <div class="col">
+              <label for="goalCalories">Objectif calories (kcal)</label>
+              <input id="goalCaloriesInp" type="number" min="0" />
+            </div>
+            <div class="col">
+              <label for="goalProteins">Objectif protéines (g)</label>
+              <input id="goalProteins" type="number" min="0" />
+            </div>
+          </div>
+
+          <!-- Activity & program (moved lower) -->
+          <div class="row">
+            <div class="col">
+              <label for="activity">Niveau d'activité</label>
+              <select id="activity">
+                <option value="1.2">Sédentaire (peu ou pas d'exercice)</option>
+                <option value="1.375">Légèrement actif (1-3j/semaine)</option>
+                <option value="1.55">Modérément actif (3-5j/semaine)</option>
+                <option value="1.725">Très actif (6-7j/semaine)</option>
+                <option value="1.9">Extrêmement actif (travail physique ou entraînement intensif)</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="programType">Programme nutritionnel</label>
+              <select id="programType">
+                <option value="maintain">Maintien</option>
+                <option value="cut">Sèche (perte de graisse)</option>
+                <option value="bulk">PDM (prise de masse)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="recommend-box" id="recommendBox" aria-live="polite" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="small-muted" id="recommendSummary">—</div>
+                <div class="small-muted" id="recommendDetails" style="margin-top:6px"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <button id="applyRecommendation" type="button" class="btn">Appliquer recommandation</button>
+                <button id="dismissRecommendation" type="button" class="btn ghost">Fermer</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button id="saveProfile" type="button" class="btn">Sauvegarder</button>
+            <button id="resetProfile" type="button" class="btn ghost">Réinitialiser</button>
+          </div>
+
+          <div class="status-line" id="firebaseStatus">Firebase: non initialisé</div>
+
+          <div style="margin-top:10px;color:var(--muted)">
+            IMC: <strong id="imcValue">—</strong>
+            • Objectif poids: <strong id="targetWeight">—</strong> kg
+          </div>
+        </form>
+      </section>
+
+      <section class="card" style="margin-top:12px">
+        <h3 style="margin:0 0 8px 0">Totaux (tous repas sauvegardés)</h3>
+        <div style="color:var(--muted);font-size:13px;margin-bottom:8px">Les totaux sont lus depuis les repas enregistrés dans l'application.</div>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <small>Calories</small><strong id="sumCalories">0 kcal</strong>
+          </div>
+          <div class="stat">
+            <small>Protéines</small><strong id="sumProteins">0 g</strong>
+          </div>
+          <div class="stat">
+            <small>Glucides</small><strong id="sumCarbs">0 g</strong>
+          </div>
+          <div class="stat">
+            <small>Lipides</small><strong id="sumFats">0 g</strong>
+          </div>
+          <div class="stat">
+            <small>Repas</small><strong id="sumMeals">0</strong>
+          </div>
+          <div class="stat">
+            <small>% Objectif calories</small><strong id="pctGoal">0%</strong>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    // --- UI + logic (local) ---
+    const PROFILE_KEY = 'sn_v2_profile';
+    const STORAGE_KEY = 'sn_v2_meals';
+
+    // Default profile with new fields: activity and programType
+    window.profile = {
+      name: '',
+      email: '',
+      weight: 75,
+      height: 175,
+      age: 30,
+      sex: 'other',
+      dietType: 'none',
+      goalCalories: 2000,
+      goalProteins: 120,
+      targetWeight: null,
+      activity: 1.55,
+      programType: 'maintain' // maintain | cut | bulk
+    };
+
+    try{ const p = localStorage.getItem(PROFILE_KEY); if(p) Object.assign(window.profile, JSON.parse(p)); }catch(e){ console.warn(e) }
+
+    /* DOM refs */
+    const nameEl = document.getElementById('name'), emailEl = document.getElementById('email');
+    const weightEl = document.getElementById('weight'), heightEl = document.getElementById('height');
+    const ageEl = document.getElementById('age'), sexEl = document.getElementById('sex');
+    const activityEl = document.getElementById('activity'), programEl = document.getElementById('programType');
+    const goalCaloriesInp = document.getElementById('goalCaloriesInp'), goalProteinsInp = document.getElementById('goalProteins');
+    const targetWeightEl = document.getElementById('targetWeight'), imcValueEl = document.getElementById('imcValue');
+    const sumCaloriesEl = document.getElementById('sumCalories'), sumProteinsEl = document.getElementById('sumProteins');
+    const sumCarbsEl = document.getElementById('sumCarbs'), sumFatsEl = document.getElementById('sumFats');
+    const sumMealsEl = document.getElementById('sumMeals'), pctGoalEl = document.getElementById('pctGoal');
+
+    const recommendBox = document.getElementById('recommendBox');
+    const recommendSummary = document.getElementById('recommendSummary');
+    const recommendDetails = document.getElementById('recommendDetails');
+    const applyRecommendationBtn = document.getElementById('applyRecommendation');
+    const dismissRecommendationBtn = document.getElementById('dismissRecommendation');
+    const firebaseStatusEl = document.getElementById('firebaseStatus');
+
+    /* Correction iOS zoom + champs plus grands pour mobile */
+    const styleIOS = document.createElement('style');
+    styleIOS.textContent = `
+      input[type="text"], input[type="number"], select {
+        font-size: 16px !important;
+        min-height: 48px;
+      }
+      @media (max-width: 760px) {
+        input[type="text"], input[type="number"], select {
+          font-size: 16px !important;
+          min-height: 54px;
+        }
+      }
+    `;
+    document.head.appendChild(styleIOS);
+
+    function populateForm(){
+      nameEl.value = window.profile.name || '';
+      emailEl.value = window.profile.email || '';
+      weightEl.value = window.profile.weight || '';
+      heightEl.value = window.profile.height || '';
+      ageEl.value = window.profile.age || '';
+      sexEl.value = window.profile.sex || 'other';
+      activityEl.value = window.profile.activity || 1.55;
+      programEl.value = window.profile.programType || 'maintain';
+      goalCaloriesInp.value = window.profile.goalCalories || 2000;
+      goalProteinsInp.value = window.profile.goalProteins || 120;
+      targetWeightEl.textContent = window.profile.targetWeight || '—';
+      calculateBMI();
+      updateTotalsUI();
+      updateRecommendationUI();
+    }
+
+    function calculateBMI(){
+      const w = Number(weightEl.value || window.profile.weight || 0);
+      const h = Number(heightEl.value || window.profile.height || 0);
+      if(w > 0 && h > 0){
+        const bmi = Math.round((w / Math.pow(h/100,2)) * 10) / 10;
+        imcValueEl.textContent = bmi;
+        return bmi;
+      } else {
+        imcValueEl.textContent = '—';
+        return null;
+      }
+    }
+
+    function updateTotalsUI(){
+      let meals = [];
+      try{ const raw = localStorage.getItem(STORAGE_KEY); if(raw) meals = JSON.parse(raw); }catch(e){ console.warn(e) }
+      const totals = meals.reduce((s,m)=>{
+        s.cal += Number(m.calories||0);
+        s.p += Number(m.proteines||0);
+        s.c += Number(m.glucides||0);
+        s.f += Number(m.lipides||0);
+        s.count += 1;
+        return s;
+      }, {cal:0,p:0,c:0,f:0,count:0});
+      sumCaloriesEl.textContent = Math.round(totals.cal) + ' kcal';
+      sumProteinsEl.textContent = Math.round(totals.p) + ' g';
+      sumCarbsEl.textContent = Math.round(totals.c) + ' g';
+      sumFatsEl.textContent = Math.round(totals.f) + ' g';
+      sumMealsEl.textContent = totals.count;
+      const pct = window.profile.goalCalories ? Math.min(100, Math.round((totals.cal / window.profile.goalCalories) * 100)) : 0;
+      pctGoalEl.textContent = pct + '%';
+    }
+
+    /* ---------------- Nutrition math helpers ---------------- */
+    function computeBMR({weight, height, age, sex}){
+      const w = Number(weight || 0);
+      const h = Number(height || 0);
+      const a = Number(age || 0);
+      if(!w || !h || !a) return null;
+      if(sex === 'male') return Math.round(10*w + 6.25*h - 5*a + 5);
+      if(sex === 'female') return Math.round(10*w + 6.25*h - 5*a - 161);
+      const male = 10*w + 6.25*h - 5*a + 5;
+      const female = 10*w + 6.25*h - 5*a -161;
+      return Math.round((male + female)/2);
+    }
+
+    function computeTDEE(bmr, activityFactor){
+      if(!bmr || !activityFactor) return null;
+      return Math.round(bmr * Number(activityFactor));
+    }
+
+    function recommendCaloriesForGoal(tdee, program){
+      if(!tdee) return null;
+      if(program === 'cut'){
+        const byFixed = tdee - 500;
+        return Math.max(1100, byFixed);
+      } else if(program === 'bulk'){
+        return tdee + 300;
+      } else {
+        return tdee;
+      }
+    }
+
+    function recommendProteinGrams(weightKg, program){
+      const w = Number(weightKg || 0) || window.profile.weight || 75;
+      let factor = 1.6;
+      if(program === 'cut') factor = 2.0;
+      else if(program === 'bulk') factor = 1.8;
+      return Math.round(w * factor);
+    }
+
+    function updateRecommendationUI(){
+      const w = Number(weightEl.value || window.profile.weight || 0);
+      const h = Number(heightEl.value || window.profile.height || 0);
+      const a = Number(ageEl.value || window.profile.age || 0);
+      const s = sexEl.value || window.profile.sex;
+      const activity = Number(activityEl.value || window.profile.activity || 1.55);
+      const program = programEl.value || window.profile.programType || 'maintain';
+
+      const bmr = computeBMR({weight: w, height: h, age: a, sex: s});
+      if(!bmr){
+        recommendBox.style.display = 'none';
+        return;
+      }
+      const tdee = computeTDEE(bmr, activity);
+      const recommended = recommendCaloriesForGoal(tdee, program);
+      const prot = recommendProteinGrams(w, program);
+
+      if(!recommended){
+        recommendBox.style.display = 'none';
+        return;
+      }
+
+      recommendSummary.textContent = `${recommended} kcal / jour recommandé pour "${program === 'cut' ? 'Sèche' : program === 'bulk' ? 'PDM' : 'Maintien'}" (TDEE estimé ${tdee} kcal)`;
+      recommendDetails.innerHTML = `BMR ≈ <strong>${bmr}</strong> kcal · TDEE ≈ <strong>${tdee}</strong> kcal (activité x${activity}) · Protéines ≈ <strong>${prot} g</strong> (~${Math.round(prot*4)} kcal)`;
+
+      recommendBox.style.display = 'block';
+    }
+
+    /* ---------------- UI actions ---------------- */
+    document.getElementById('saveProfile').addEventListener('click', ()=>{
+      window.profile.name = nameEl.value.trim() || window.profile.name;
+      window.profile.email = emailEl.value.trim() || window.profile.email;
+      window.profile.weight = Number(weightEl.value) || window.profile.weight;
+      window.profile.height = Number(heightEl.value) || window.profile.height;
+      window.profile.age = Number(ageEl.value) || window.profile.age;
+      window.profile.sex = sexEl.value || window.profile.sex;
+      window.profile.activity = Number(activityEl.value) || window.profile.activity;
+      window.profile.programType = programEl.value || window.profile.programType;
+
+      window.profile.goalCalories = Number(goalCaloriesInp.value) || window.profile.goalCalories;
+      window.profile.goalProteins = Number(goalProteinsInp.value) || window.profile.goalProteins;
+
+      try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(window.profile)); }catch(e){ console.warn(e) }
+      calculateBMI();
+      updateTotalsUI();
+      updateRecommendationUI();
+      // Firestore save handled below in firebase integration
+    });
+
+    document.getElementById('resetProfile').addEventListener('click', ()=>{
+      if(!confirm('Réinitialiser le profil aux valeurs par défaut ?')) return;
+      localStorage.removeItem(PROFILE_KEY);
+      window.profile = { name:'', email:'', weight:75, height:175, age:30, sex:'other', dietType:'none', goalCalories:2000, goalProteins:120, targetWeight:null, activity:1.55, programType:'maintain' };
+      populateForm();
+      updateTotalsUI();
+    });
+
+    [weightEl, heightEl, ageEl, sexEl, activityEl, programEl].forEach(el=>{
+      el.addEventListener('change', updateRecommendationUI);
+      el.addEventListener('input', updateRecommendationUI);
+    });
+
+    applyRecommendationBtn.addEventListener('click', ()=>{
+      const w = Number(weightEl.value || window.profile.weight || 0);
+      const a = Number(ageEl.value || window.profile.age || 0);
+      const h = Number(heightEl.value || window.profile.height || 0);
+      const s = sexEl.value || window.profile.sex;
+      const activity = Number(activityEl.value || window.profile.activity || 1.55);
+      const program = programEl.value || window.profile.programType || 'maintain';
+      const bmr = computeBMR({weight: w, height: h, age: a, sex: s});
+      const tdee = computeTDEE(bmr, activity);
+      const recommended = recommendCaloriesForGoal(tdee, program);
+      const prot = recommendProteinGrams(w, program);
+
+      if(recommended){
+        goalCaloriesInp.value = recommended;
+        goalProteinsInp.value = prot;
+        window.profile.goalCalories = recommended;
+        window.profile.goalProteins = prot;
+        try{ localStorage.setItem(PROFILE_KEY, JSON.stringify(window.profile)); }catch(e){ console.warn(e) }
+        updateTotalsUI();
+        alert('Objectif recommandé appliqué.');
+      } else {
+        alert('Impossible de calculer une recommandation — vérifiez vos informations.');
+      }
+    });
+
+    dismissRecommendationBtn.addEventListener('click', ()=> recommendBox.style.display = 'none');
+
+    weightEl.addEventListener('input', calculateBMI);
+    heightEl.addEventListener('input', calculateBMI);
+
+    populateForm();
+    window.addEventListener('storage', ()=> { 
+      try{ Object.assign(window.profile, JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}')); }catch(e){}
+      populateForm(); updateTotalsUI();
+    });
+
+    // --- Firebase configuration & initialization ---
+    // Placer la configuration tout en haut du script
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_3k3stpYt3R6ysGOqRUw6UAk-ePYaUCM",
+      authDomain: "appp-6ead3.firebaseapp.com",
+      projectId: "appp-6ead3"
+    };
+
+    // Fonction d'initialisation sûre (évite double init)
+    let fbApp = null;
+    let fbAuth = null;
+    let fbDb = null;
+    let fbUid = null;
+    let firebaseInitError = null;
+    
+    function safeInitFirebase() {
+      try {
+        if (!window._firebaseApp) {
+          // Import dynamique des modules Firebase
+          // (nécessaire car on est en type="module")
+          window._firebaseApp = firebase.initializeApp(firebaseConfig);
+        }
+        return window._firebaseApp;
+      } catch (e) {
+        firebaseInitError = e;
+        return null;
+      }
+    }
+
+    // Importer les modules Firebase (modular SDK)
+    import {
+      initializeApp, getApps
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import {
+      getAuth, signInAnonymously, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    // Initialisation unique
+    try {
+      if (!getApps().length) {
+        fbApp = initializeApp(firebaseConfig);
+      } else {
+        fbApp = getApps()[0];
+      }
+      fbAuth = getAuth(fbApp);
+      fbDb = getFirestore(fbApp);
+      firebaseStatusEl.textContent = "Firebase: initialisé";
+    } catch (e) {
+      firebaseInitError = e;
+      firebaseStatusEl.textContent = "Firebase: initialisation échouée";
+      console.warn("Firebase init error", e);
+    }
+
+    async function fbSignInAnon(){
+      if(!fbAuth) return;
+      try{
+        await signInAnonymously(fbAuth);
+        firebaseStatusEl.textContent = "Firebase: tentative de connexion anonyme…";
+      }catch(e){
+        console.warn("Firebase anonymous sign-in failed", e);
+        firebaseStatusEl.textContent = "Firebase: connexion anonyme échouée";
+      }
+    }
+
+    function uidPath(){
+      return fbUid ? `users/${fbUid}` : null;
+    }
+
+    // save profile to Firestore at users/{uid}/profile
+    async function fbSaveProfile(profileObj){
+      if(!fbUid) throw new Error("Not signed in");
+      const ref = doc(fbDb, "users", fbUid, "meta", "profile");
+      await setDoc(ref, Object.assign({}, profileObj, { updatedAt: serverTimestamp() }), { merge: true });
+    }
+
+    async function fbLoadProfile(){
+      if(!fbUid) return null;
+      const ref = doc(fbDb, "users", fbUid, "meta", "profile");
+      const snap = await getDoc(ref);
+      if(!snap.exists()) return null;
+      return snap.data();
+    }
+
+    async function fbMigrateLocalToFirestore(){
+      if(!fbUid) return;
+      try{
+        const localMeals = JSON.parse(localStorage.getItem('sn_v2_meals') || '[]');
+        const localProfile = JSON.parse(localStorage.getItem('sn_v2_profile') || '{}');
+        // merge profile
+        if(localProfile && Object.keys(localProfile).length){
+          await fbSaveProfile(localProfile);
+        }
+        // push meals avoiding obvious duplicates by simple heuristic
+        if(localMeals && localMeals.length){
+          const existingSnap = await getDocs(collection(fbDb, "users", fbUid, "meals"));
+          const existing = [];
+          existingSnap.forEach(d => existing.push(d.data()));
+          for(const m of localMeals){
+            const dup = existing.find(e => e.date === m.date && e.aliment === m.aliment && Number(e.calories||0) === Number(m.calories||0));
+            if(!dup){
+              await addDoc(collection(fbDb, "users", fbUid, "meals"), Object.assign({}, m, { createdAt: serverTimestamp() }));
+            }
+          }
+        }
+      }catch(e){
+        console.warn("Migration error", e);
+      }
+    }
+
+    // react to auth state
+    if(fbAuth){
+      onAuthStateChanged(fbAuth, async (user) => {
+        if(user){
+          fbUid = user.uid;
+          firebaseStatusEl.textContent = `Firebase: connecté (uid ${fbUid})`;
+          // Try load remote profile and merge into local profile
+          try{
+            const remoteProfile = await fbLoadProfile();
+            if(remoteProfile){
+              // Merge: remote keys overwrite local ones when present
+              const local = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
+              const merged = Object.assign({}, local, remoteProfile);
+              localStorage.setItem(PROFILE_KEY, JSON.stringify(merged));
+              Object.assign(window.profile, merged);
+              populateForm();
+            }
+          }catch(e){ console.warn("Failed to load remote profile", e); }
+
+          // Migrate local data to Firestore (optional)
+          try{
+            const migrateLocal = true;
+            if(migrateLocal){
+              await fbMigrateLocalToFirestore();
+            }
+          }catch(e){ console.warn("Migration failed", e); }
+        } else {
+          firebaseStatusEl.textContent = "Firebase: pas connecté";
+          fbUid = null;
+        }
+      });
+    }
+
+    // Kick auth
+    fbSignInAnon();
+
+    // Quand l'utilisateur sauvegarde le profil localement, sauvegarder aussi sur Firestore (si connecté)
+    document.getElementById('saveProfile').addEventListener('click', async () => {
+      // petit délai pour laisser le handler local agir d'abord
+      await new Promise(r => setTimeout(r, 120));
+      try{
+        const stored = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
+        if(fbUid){
+          await fbSaveProfile(stored);
+          alert('Profil sauvegardé !');
+        }
+      }catch(e){
+        console.warn("Error saving profile to Firestore", e);
+        alert('Erreur lors de la sauvegarde du profil : ' + e.message);
+      }
+    });
+
+  </script>
+</body>
+</html>
+
