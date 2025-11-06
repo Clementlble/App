@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>EatWise — Connexion / Inscription</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#fff;
+      --accent:#15b79a;
+      --accent-2:#0f9e85;
+      --muted:#6c7780;
+      --danger:#e74c3c;
+      --radius:14px;
+      --gap:12px;
+      --btn-h:54px;
+      --input-h:48px;
+    }
+    /* Prevent iOS zoom on inputs by ensuring font-size >=16px */
+    input, select, button, textarea { font-size:16px; -webkit-font-smoothing:antialiased; }
+    html,body{height:100%;margin:0;font-family:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,Arial;-webkit-text-size-adjust:100%}
+    body{
+      background:linear-gradient(180deg,var(--bg),#eef4f8);
+      color:#132a31;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:env(safe-area-inset-top) 16px calc(18px + env(safe-area-inset-bottom));
+      -webkit-overflow-scrolling:touch;
+      touch-action:manipulation;
+    }
+    .shell{width:100%;max-width:760px;margin:0 auto}
+    .card{
+      background:var(--card);
+      border-radius:18px;
+      padding:14px;
+      border:1px solid rgba(15,25,30,0.04);
+      box-shadow:0 18px 40px rgba(10,20,25,0.06);
+      overflow:hidden;
+    }
+
+    /* Header */
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(21,183,154,0.08)}
+    .logo img{width:40px;height:40px;border-radius:8px}
+    .title h1{margin:0;font-size:18px;color:#13333a}
+    .title p{margin:3px 0 0 0;color:var(--muted);font-size:13px}
+
+    /* Tabs (segmented) */
+    .tabs{display:flex;border-radius:12px;background:#f8fbfa;padding:6px;gap:6px;min-width:220px}
+    .tab{
+      padding:10px 12px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-weight:700;color:var(--muted);
+      font-size:15px;flex:1;text-align:center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab[aria-selected="true"]{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;
+      box-shadow:0 8px 22px rgba(21,183,154,0.12);
+    }
+
+    /* Layout */
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width:880px){ .grid{grid-template-columns:1fr} }
+    .panel{background:linear-gradient(180deg,#fff,#fbfffd);border-radius:12px;padding:12px;border:1px solid rgba(15,25,30,0.03)}
+    form{display:flex;flex-direction:column;gap:10px}
+    label{font-size:13px;color:var(--muted)}
+    input,select,textarea{
+      width:100%;height:var(--input-h);padding:12px;border-radius:10px;border:1px solid rgba(15,25,30,0.06);
+      font-size:16px;background:#fff;box-sizing:border-box;
+      -webkit-appearance:none;appearance:none;
+    }
+    input::placeholder{color:#bfc9c6}
+    .row{display:flex;gap:8px}
+    .row .col{flex:1}
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:0 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;height:var(--btn-h);font-size:16px}
+    .ghost{background:transparent;color:var(--muted);border:1px solid rgba(15,25,30,0.04)}
+    .links{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:14px}
+    .hint{font-size:13px;color:var(--muted);min-height:18px}
+    .error{color:var(--danger);font-size:13px;min-height:18px}
+    .success{color:green;font-size:13px;min-height:18px}
+    .small{font-size:13px;color:var(--muted)}
+    .center{display:flex;justify-content:center}
+    .note{font-size:13px;color:var(--muted);margin-top:10px}
+    .ghost, .tab { touch-action:manipulation; -webkit-tap-highlight-color: transparent; border-radius:10px }
+
+    /* increased hit targets for iPhone (touch) */
+    button, .tab { min-height:40px; padding-top:10px; padding-bottom:10px; }
+
+    /* iOS autofill fixes */
+    input:-webkit-autofill {
+      -webkit-text-fill-color: #132a31 !important;
+      transition: background-color 600000s 0s;
+    }
+
+    /* reduce animations on iPhone to save battery */
+    @media (hover:none) and (pointer:coarse) {
+      * { transition-duration: 0.08s !important; }
+    }
+
+    /* Small screens tweaks */
+    @media (max-width:420px){
+      .card{padding:12px}
+      .title h1{font-size:18px}
+      .logo{width:44px;height:44px}
+      .logo img{width:36px;height:36px}
+      .tabs{gap:4px}
+      input,select{height:50px}
+      .btn{height:52px}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="card" role="main" aria-labelledby="authTitle">
+      <div class="top">
+        <div class="brand" style="gap:10px">
+          <div class="logo" aria-hidden="true">
+            <img src="https://firebasestorage.googleapis.com/v0/b/justfit-bed28.firebasestorage.app/o/logoapp.jpg?alt=media&token=85987921-9c3a-445a-979d-9662c2d17e93" alt="EatWise">
+          </div>
+          <div class="title">
+            <h1 id="authTitle">EatWise</h1>
+          </div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Connexion ou inscription">
+         <button id="tabLogin" class="tab" role="tab" aria-selected="true" aria-controls="panelLogin" style="margin-left: 20px;">Connexion</button>
+          <button id="tabSignup" class="tab" role="tab" aria-selected="false" aria-controls="panelSignup">Inscription</button>
+        </div>
+      </div>
+
+      <div class="grid" aria-live="polite">
+        <!-- LOGIN -->
+        <section id="panelLogin" class="panel" aria-labelledby="loginHeading" role="region">
+          <h2 id="loginHeading" style="margin:0 0 8px 0">Connexion</h2>
+          <div id="loginHint" class="hint">Connecte-toi pour synchroniser tes favoris.</div>
+
+          <form id="loginForm" autocomplete="on" novalidate>
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" name="email" type="email" inputmode="email" placeholder="adresse@mail.com" autocomplete="email" required />
+
+            <label for="loginPassword">Mot de passe</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="loginPassword" name="password" type="password" placeholder="Mot de passe" autocomplete="current-password" required />
+              <button type="button" id="loginTogglePw" class="ghost" aria-label="Voir mot de passe">Voir</button>
+            </div>
+
+            <div class="links" style="margin-top:8px">
+             
+              <a href="#" id="forgotLink" class="small">Mot de passe oublié ?</a>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" type="submit" style="flex:1;height: 20px;width: 132px;margin-top: 20px;" "="">Se connecter</button>
+			  
+             
+            </div>
+
+            <div id="loginError" class="error" role="alert" aria-live="assertive"></div>
+            <div id="loginSuccess" class="success" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <!-- SIGNUP -->
+        <section id="panelSignup" class="panel" aria-labelledby="signupHeading" role="region" style="display:none">
+          <h2 id="signupHeading" style="margin:0 0 8px 0">Inscription</h2>
+          <div id="signupHint" class="hint">Crée un compte pour sauvegarder tes recettes et favoris.</div>
+
+          <form id="signupForm" autocomplete="on" novalidate>
+            <div class="row">
+              <div class="col">
+                <label for="firstName">Prénom</label>
+                <input id="firstName" type="text" autocomplete="given-name" placeholder="Prénom" required />
+              </div>
+              <div class="col">
+                <label for="lastName">Nom</label>
+                <input id="lastName" type="text" autocomplete="family-name" placeholder="Nom" />
+              </div>
+            </div>
+
+            <label for="signupEmail">Email</label>
+            <input id="signupEmail" type="email" inputmode="email" autocomplete="email" placeholder="adresse@mail.com" required />
+
+            <div class="row">
+              <div class="col">
+                <label for="signupPassword">Mot de passe</label>
+                <input id="signupPassword" type="password" autocomplete="new-password" placeholder="8+ caractères" required />
+              </div>
+              <div class="col">
+                <label for="signupConfirm">Confirmer</label>
+                <input id="signupConfirm" type="password" autocomplete="new-password" placeholder="Confirme" required />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                
+             
+           <button class="btn" type="submit" style="flex:1;height: 20px;width: 342px;margin-top: 20px;" "="">Créer mon compte</button>
+
+            <div id="signupError" class="error" role="alert" aria-live="assertive"></div>
+            <div id="signupSuccess" class="success" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+      </div>
+
+      
+    </div>
+  </div>
+
+<script type="module">
+/* Mobile-optimized combined auth script
+   - Firebase modular auth attempted; fallback local storage for development
+   - Profile saved in localStorage as 'sn_v2_profile'
+*/
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_3k3stpYt3R6ysGOqRUw6UAk-ePYaUCM",
+  authDomain: "appp-6ead3.firebaseapp.com",
+  projectId: "appp-6ead3"
+};
+
+let fb = { available:false, auth:null };
+async function tryInitFirebase(){
+  try{
+    const appMod = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js');
+    const authMod = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
+    const { initializeApp, getApps } = appMod;
+    const { getAuth } = authMod;
+    let app;
+    if(!getApps().length) app = initializeApp(firebaseConfig);
+    else app = getApps()[0];
+    fb.available = true;
+    fb.auth = getAuth(app);
+    console.info('Firebase initialisé (auth)');
+  }catch(e){
+    fb.available = false;
+    fb.auth = null;
+    console.warn('Firebase non initialisé — fallback local', e);
+  }
+}
+await tryInitFirebase();
+
+/* DOM */
+const tabLogin = document.getElementById('tabLogin');
+const tabSignup = document.getElementById('tabSignup');
+const panelLogin = document.getElementById('panelLogin');
+const panelSignup = document.getElementById('panelSignup');
+
+const loginForm = document.getElementById('loginForm');
+const loginEmail = document.getElementById('loginEmail');
+const loginPassword = document.getElementById('loginPassword');
+const loginTogglePw = document.getElementById('loginTogglePw');
+const loginError = document.getElementById('loginError');
+const loginSuccess = document.getElementById('loginSuccess');
+const rememberEl = document.getElementById('remember');
+const guestBtn = document.getElementById('guestBtn');
+
+const signupForm = document.getElementById('signupForm');
+const firstName = document.getElementById('firstName');
+const lastName = document.getElementById('lastName');
+const signupEmail = document.getElementById('signupEmail');
+const signupPassword = document.getElementById('signupPassword');
+const signupConfirm = document.getElementById('signupConfirm');
+const goalCalories = document.getElementById('goalCalories');
+const activityLevel = document.getElementById('activityLevel');
+const signupError = document.getElementById('signupError');
+const signupSuccess = document.getElementById('signupSuccess');
+
+/* Tab handlers */
+function showLogin(){ tabLogin.setAttribute('aria-selected','true'); tabSignup.setAttribute('aria-selected','false'); panelLogin.style.display=''; panelSignup.style.display='none'; }
+function showSignup(){ tabLogin.setAttribute('aria-selected','false'); tabSignup.setAttribute('aria-selected','true'); panelLogin.style.display='none'; panelSignup.style.display=''; }
+tabLogin.addEventListener('click', showLogin);
+tabSignup.addEventListener('click', showSignup);
+
+/* Local users helpers (demo only) */
+function readLocalUsers(){ try{ return JSON.parse(localStorage.getItem('sn_v2_users')||'[]'); }catch(e){ return []; } }
+function writeLocalUsers(users){ try{ localStorage.setItem('sn_v2_users', JSON.stringify(users)); }catch(e){} }
+
+/* Messaging helpers */
+function showLoginError(t){ loginError.textContent = t; loginSuccess.textContent = ''; }
+function showLoginSuccess(t){ loginSuccess.textContent = t; loginError.textContent = ''; }
+function showSignupError(t){ signupError.textContent = t; signupSuccess.textContent = ''; }
+function showSignupSuccess(t){ signupSuccess.textContent = t; signupError.textContent = ''; }
+
+/* Local sign-in */
+async function localSignIn(email, password){
+  try{
+    const users = readLocalUsers();
+    const u = users.find(x => x.email === email);
+    if(!u) throw new Error('Utilisateur non trouvé (local).');
+    if(u.password !== password) throw new Error('Mot de passe incorrect (local).');
+    const profile = u.profile || { goalCalories:2000, name: u.name || '' };
+    localStorage.setItem('sn_v2_profile', JSON.stringify(profile));
+    return { ok:true, local:true };
+  }catch(e){ return { ok:false, error:e }; }
+}
+
+/* Firebase sign-in */
+async function firebaseSignIn(email, password){
+  try{
+    if(!fb.available || !fb.auth) throw new Error('Firebase non initialisé');
+    const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
+    const res = await signInWithEmailAndPassword(fb.auth, email, password);
+    const profile = { goalCalories:2000, uid: res.user.uid, email: res.user.email };
+    localStorage.setItem('sn_v2_profile', JSON.stringify(profile));
+    return { ok:true, firebase:true, uid: res.user.uid };
+  }catch(e){ return { ok:false, error:e }; }
+}
+
+/* Local create user */
+async function localCreateUser(email, password, profile){
+  try{
+    const users = readLocalUsers();
+    if(users.find(u=>u.email === email)) throw new Error('Email déjà utilisé (local).');
+    users.push({ email, password, name: profile.name || '', profile });
+    writeLocalUsers(users);
+    localStorage.setItem('sn_v2_profile', JSON.stringify(profile));
+    return { ok:true };
+  }catch(e){ return { ok:false, error:e }; }
+}
+
+/* Firebase create user */
+async function firebaseCreateUser(email, password, profile){
+  try{
+    if(!fb.available || !fb.auth) throw new Error('Firebase non initialisé');
+    const { createUserWithEmailAndPassword, updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
+    const res = await createUserWithEmailAndPassword(fb.auth, email, password);
+    if(profile.name){
+      try{ await updateProfile(res.user, { displayName: profile.name }); }catch(e){}
+    }
+    const stored = Object.assign({}, profile, { uid: res.user.uid, email: res.user.email });
+    localStorage.setItem('sn_v2_profile', JSON.stringify(stored));
+    return { ok:true, uid: res.user.uid };
+  }catch(e){ return { ok:false, error:e }; }
+}
+
+/* Login submit */
+loginForm.addEventListener('submit', async (ev)=>{
+  ev.preventDefault();
+  loginError.textContent = ''; loginSuccess.textContent = '';
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+  if(!email || !password) return showLoginError('Email et mot de passe requis.');
+  showLoginSuccess('Connexion en cours…');
+
+  if(fb.available){
+    const r = await firebaseSignIn(email, password);
+    if(r.ok){
+      showLoginSuccess('Connecté (Firebase). Redirection…');
+      if(rememberEl.checked) localStorage.setItem('sn_last_email', email);
+      setTimeout(()=> location.href = 'index.html', 700);
+      return;
+    } else {
+      console.warn('Firebase signin failed:', r.error);
+    }
+  }
+
+  const lr = await localSignIn(email, password);
+  if(lr.ok){
+    showLoginSuccess('Connecté (local). Redirection…');
+    if(rememberEl.checked) localStorage.setItem('sn_last_email', email);
+    setTimeout(()=> location.href = 'index.html', 700);
+    return;
+  } else {
+    showLoginError('Impossible de se connecter. Vérifie tes identifiants.');
+    console.warn('Local signin failed:', lr.error);
+  }
+});
+
+/* Signup submit */
+signupForm.addEventListener('submit', async (ev)=>{
+  ev.preventDefault();
+  signupError.textContent = ''; signupSuccess.textContent = '';
+  const name = firstName.value.trim();
+  const surname = lastName.value.trim();
+  const email = signupEmail.value.trim();
+  const password = signupPassword.value;
+  const confirm = signupConfirm.value;
+  const goal = Number(goalCalories.value) || 2000;
+  const activity = Number(activityLevel.value) || 1.55;
+
+  if(!name || !email || !password || !confirm) return showSignupError('Remplis tous les champs requis.');
+  if(password.length < 8) return showSignupError('Le mot de passe doit contenir au moins 8 caractères.');
+  if(password !== confirm) return showSignupError('Les mots de passe ne correspondent pas.');
+
+  showSignupSuccess('Création du compte…');
+
+  const profile = { name, surname, goalCalories: goal, activity };
+
+  if(fb.available){
+    const r = await firebaseCreateUser(email, password, profile);
+    if(r.ok){
+      showSignupSuccess('Compte créé (Firebase). Redirection…');
+      setTimeout(()=> location.href = 'index.html', 900);
+      return;
+    } else {
+      console.warn('Firebase signup failed:', r.error);
+    }
+  }
+
+  const lr = await localCreateUser(email, password, profile);
+  if(lr.ok){
+    showSignupSuccess('Compte créé (local). Redirection…');
+    setTimeout(()=> location.href = 'index.html', 800);
+    return;
+  } else {
+    showSignupError('Impossible de créer le compte : ' + (lr.error?.message || 'erreur'));
+  }
+});
+
+/* Guest */
+guestBtn.addEventListener('click', ()=>{
+  const profile = { goalCalories:2000, guest:true };
+  try{ localStorage.setItem('sn_v2_profile', JSON.stringify(profile)); }catch(e){}
+  location.href = 'index.html';
+});
+
+/* Toggle password visibility */
+loginTogglePw.addEventListener('click', ()=>{
+  if(loginPassword.type === 'password'){ loginPassword.type = 'text'; loginTogglePw.textContent = 'Cacher'; }
+  else { loginPassword.type = 'password'; loginTogglePw.textContent = 'Voir'; }
+});
+
+/* Prefill remembered email */
+try{ const s = localStorage.getItem('sn_last_email'); if(s) loginEmail.value = s; }catch(e){}
+</script>
+</body>
+</html>
