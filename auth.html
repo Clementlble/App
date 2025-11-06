@@ -20,7 +20,6 @@
       --btn-h:54px;
       --input-h:48px;
     }
-    /* Prevent iOS zoom on inputs by ensuring font-size >=16px */
     input, select, button, textarea { font-size:16px; -webkit-font-smoothing:antialiased; }
     html,body{height:100%;margin:0;font-family:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,Arial;-webkit-text-size-adjust:100%}
     body{
@@ -43,7 +42,6 @@
       overflow:hidden;
     }
 
-    /* Header */
     .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
     .brand{display:flex;gap:12px;align-items:center}
     .logo{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(21,183,154,0.08)}
@@ -51,12 +49,12 @@
     .title h1{margin:0;font-size:18px;color:#13333a}
     .title p{margin:3px 0 0 0;color:var(--muted);font-size:13px}
 
-    /* Tabs (segmented) */
-    .tabs{display:flex;border-radius:12px;background:#f8fbfa;padding:6px;gap:6px;min-width:220px}
+    .tabs{display:flex;border-radius:12px;background:#f8fbfa;padding:4px;gap:4px;min-width:200px}
     .tab{
-      padding:10px 12px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-weight:700;color:var(--muted);
-      font-size:15px;flex:1;text-align:center;
+      padding:8px 10px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-weight:700;color:var(--muted);
+      font-size:14px;flex:1;text-align:center;
       -webkit-tap-highlight-color: transparent;
+      min-height:36px;
     }
     .tab[aria-selected="true"]{
       background:linear-gradient(90deg,var(--accent),var(--accent-2));
@@ -64,7 +62,6 @@
       box-shadow:0 8px 22px rgba(21,183,154,0.12);
     }
 
-    /* Layout */
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     @media (max-width:880px){ .grid{grid-template-columns:1fr} }
     .panel{background:linear-gradient(180deg,#fff,#fbfffd);border-radius:12px;padding:12px;border:1px solid rgba(15,25,30,0.03)}
@@ -78,7 +75,18 @@
     input::placeholder{color:#bfc9c6}
     .row{display:flex;gap:8px}
     .row .col{flex:1}
-    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:0 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;height:var(--btn-h);font-size:16px}
+    .btn{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;
+      padding:0 16px;
+      border-radius:10px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+      height:var(--btn-h);
+      font-size:16px;
+      width:100%;
+    }
     .ghost{background:transparent;color:var(--muted);border:1px solid rgba(15,25,30,0.04)}
     .links{display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:14px}
     .hint{font-size:13px;color:var(--muted);min-height:18px}
@@ -89,21 +97,48 @@
     .note{font-size:13px;color:var(--muted);margin-top:10px}
     .ghost, .tab { touch-action:manipulation; -webkit-tap-highlight-color: transparent; border-radius:10px }
 
-    /* increased hit targets for iPhone (touch) */
-    button, .tab { min-height:40px; padding-top:10px; padding-bottom:10px; }
+    button, .tab { min-height:36px; padding-top:8px; padding-bottom:8px; }
 
-    /* iOS autofill fixes */
     input:-webkit-autofill {
       -webkit-text-fill-color: #132a31 !important;
       transition: background-color 600000s 0s;
     }
 
-    /* reduce animations on iPhone to save battery */
     @media (hover:none) and (pointer:coarse) {
       * { transition-duration: 0.08s !important; }
     }
 
-    /* Small screens tweaks */
+    /* Animations de transition */
+    .panel {
+      animation: slideIn 0.4s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .panel.slide-out {
+      animation: slideOut 0.3s ease-in forwards;
+    }
+
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+    }
+
     @media (max-width:420px){
       .card{padding:12px}
       .title h1{font-size:18px}
@@ -129,7 +164,7 @@
         </div>
 
         <div class="tabs" role="tablist" aria-label="Connexion ou inscription">
-         <button id="tabLogin" class="tab" role="tab" aria-selected="true" aria-controls="panelLogin" style="margin-left: 20px;">Connexion</button>
+          <button id="tabLogin" class="tab" role="tab" aria-selected="true" aria-controls="panelLogin">Connexion</button>
           <button id="tabSignup" class="tab" role="tab" aria-selected="false" aria-controls="panelSignup">Inscription</button>
         </div>
       </div>
@@ -151,15 +186,10 @@
             </div>
 
             <div class="links" style="margin-top:8px">
-             
               <a href="#" id="forgotLink" class="small">Mot de passe oublié ?</a>
             </div>
 
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="btn" type="submit" style="flex:1;height: 20px;width: 132px;margin-top: 20px;" "="">Se connecter</button>
-			  
-             
-            </div>
+            <button class="btn" type="submit" style="margin-top:20px">Se connecter</button>
 
             <div id="loginError" class="error" role="alert" aria-live="assertive"></div>
             <div id="loginSuccess" class="success" role="status" aria-live="polite"></div>
@@ -197,28 +227,17 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col">
-                
-             
-           <button class="btn" type="submit" style="flex:1;height: 20px;width: 342px;margin-top: 20px;" "="">Créer mon compte</button>
+            <button class="btn" type="submit" style="margin-top:20px">Créer mon compte</button>
 
             <div id="signupError" class="error" role="alert" aria-live="assertive"></div>
             <div id="signupSuccess" class="success" role="status" aria-live="polite"></div>
           </form>
         </section>
       </div>
-
-      
     </div>
   </div>
 
 <script type="module">
-/* Mobile-optimized combined auth script
-   - Firebase modular auth attempted; fallback local storage for development
-   - Profile saved in localStorage as 'sn_v2_profile'
-*/
-
 const firebaseConfig = {
   apiKey: "AIzaSyC_3k3stpYt3R6ysGOqRUw6UAk-ePYaUCM",
   authDomain: "appp-6ead3.firebaseapp.com",
@@ -226,22 +245,21 @@ const firebaseConfig = {
 };
 
 let fb = { available:false, auth:null };
+
 async function tryInitFirebase(){
   try{
-    const appMod = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js');
-    const authMod = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
-    const { initializeApp, getApps } = appMod;
-    const { getAuth } = authMod;
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js');
+    const { getAuth } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
     let app;
     if(!getApps().length) app = initializeApp(firebaseConfig);
     else app = getApps()[0];
     fb.available = true;
     fb.auth = getAuth(app);
-    console.info('Firebase initialisé (auth)');
+    console.info('✅ Firebase initialisé');
   }catch(e){
     fb.available = false;
     fb.auth = null;
-    console.warn('Firebase non initialisé — fallback local', e);
+    console.warn('⚠️ Firebase non initialisé — fallback local', e);
   }
 }
 await tryInitFirebase();
@@ -258,8 +276,6 @@ const loginPassword = document.getElementById('loginPassword');
 const loginTogglePw = document.getElementById('loginTogglePw');
 const loginError = document.getElementById('loginError');
 const loginSuccess = document.getElementById('loginSuccess');
-const rememberEl = document.getElementById('remember');
-const guestBtn = document.getElementById('guestBtn');
 
 const signupForm = document.getElementById('signupForm');
 const firstName = document.getElementById('firstName');
@@ -267,20 +283,43 @@ const lastName = document.getElementById('lastName');
 const signupEmail = document.getElementById('signupEmail');
 const signupPassword = document.getElementById('signupPassword');
 const signupConfirm = document.getElementById('signupConfirm');
-const goalCalories = document.getElementById('goalCalories');
-const activityLevel = document.getElementById('activityLevel');
 const signupError = document.getElementById('signupError');
 const signupSuccess = document.getElementById('signupSuccess');
 
-/* Tab handlers */
-function showLogin(){ tabLogin.setAttribute('aria-selected','true'); tabSignup.setAttribute('aria-selected','false'); panelLogin.style.display=''; panelSignup.style.display='none'; }
-function showSignup(){ tabLogin.setAttribute('aria-selected','false'); tabSignup.setAttribute('aria-selected','true'); panelLogin.style.display='none'; panelSignup.style.display=''; }
+/* Tab handlers avec animations */
+function showLogin(){ 
+  panelSignup.classList.add('slide-out');
+  setTimeout(() => {
+    tabLogin.setAttribute('aria-selected','true'); 
+    tabSignup.setAttribute('aria-selected','false'); 
+    panelLogin.style.display=''; 
+    panelSignup.style.display='none';
+    panelSignup.classList.remove('slide-out');
+  }, 300);
+}
+
+function showSignup(){ 
+  panelLogin.classList.add('slide-out');
+  setTimeout(() => {
+    tabLogin.setAttribute('aria-selected','false'); 
+    tabSignup.setAttribute('aria-selected','true'); 
+    panelLogin.style.display='none'; 
+    panelSignup.style.display='';
+    panelLogin.classList.remove('slide-out');
+  }, 300);
+}
 tabLogin.addEventListener('click', showLogin);
 tabSignup.addEventListener('click', showSignup);
 
-/* Local users helpers (demo only) */
-function readLocalUsers(){ try{ return JSON.parse(localStorage.getItem('sn_v2_users')||'[]'); }catch(e){ return []; } }
-function writeLocalUsers(users){ try{ localStorage.setItem('sn_v2_users', JSON.stringify(users)); }catch(e){} }
+/* Local users helpers */
+function readLocalUsers(){ 
+  try{ return JSON.parse(localStorage.getItem('sn_v2_users')||'[]'); }
+  catch(e){ return []; } 
+}
+function writeLocalUsers(users){ 
+  try{ localStorage.setItem('sn_v2_users', JSON.stringify(users)); }
+  catch(e){} 
+}
 
 /* Messaging helpers */
 function showLoginError(t){ loginError.textContent = t; loginSuccess.textContent = ''; }
@@ -298,7 +337,9 @@ async function localSignIn(email, password){
     const profile = u.profile || { goalCalories:2000, name: u.name || '' };
     localStorage.setItem('sn_v2_profile', JSON.stringify(profile));
     return { ok:true, local:true };
-  }catch(e){ return { ok:false, error:e }; }
+  }catch(e){ 
+    return { ok:false, error:e }; 
+  }
 }
 
 /* Firebase sign-in */
@@ -307,10 +348,17 @@ async function firebaseSignIn(email, password){
     if(!fb.available || !fb.auth) throw new Error('Firebase non initialisé');
     const { signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
     const res = await signInWithEmailAndPassword(fb.auth, email, password);
-    const profile = { goalCalories:2000, uid: res.user.uid, email: res.user.email };
+    const profile = { 
+      goalCalories:2000, 
+      uid: res.user.uid, 
+      email: res.user.email,
+      name: res.user.displayName || ''
+    };
     localStorage.setItem('sn_v2_profile', JSON.stringify(profile));
     return { ok:true, firebase:true, uid: res.user.uid };
-  }catch(e){ return { ok:false, error:e }; }
+  }catch(e){ 
+    return { ok:false, error:e }; 
+  }
 }
 
 /* Local create user */
@@ -322,7 +370,9 @@ async function localCreateUser(email, password, profile){
     writeLocalUsers(users);
     localStorage.setItem('sn_v2_profile', JSON.stringify(profile));
     return { ok:true };
-  }catch(e){ return { ok:false, error:e }; }
+  }catch(e){ 
+    return { ok:false, error:e }; 
+  }
 }
 
 /* Firebase create user */
@@ -332,39 +382,50 @@ async function firebaseCreateUser(email, password, profile){
     const { createUserWithEmailAndPassword, updateProfile } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
     const res = await createUserWithEmailAndPassword(fb.auth, email, password);
     if(profile.name){
-      try{ await updateProfile(res.user, { displayName: profile.name }); }catch(e){}
+      try{ 
+        await updateProfile(res.user, { displayName: profile.name }); 
+      }catch(e){
+        console.warn('Erreur updateProfile:', e);
+      }
     }
     const stored = Object.assign({}, profile, { uid: res.user.uid, email: res.user.email });
     localStorage.setItem('sn_v2_profile', JSON.stringify(stored));
     return { ok:true, uid: res.user.uid };
-  }catch(e){ return { ok:false, error:e }; }
+  }catch(e){ 
+    return { ok:false, error:e }; 
+  }
 }
 
 /* Login submit */
 loginForm.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
-  loginError.textContent = ''; loginSuccess.textContent = '';
+  loginError.textContent = ''; 
+  loginSuccess.textContent = '';
+  
   const email = loginEmail.value.trim();
   const password = loginPassword.value;
+  
   if(!email || !password) return showLoginError('Email et mot de passe requis.');
+  
   showLoginSuccess('Connexion en cours…');
 
   if(fb.available){
     const r = await firebaseSignIn(email, password);
     if(r.ok){
-      showLoginSuccess('Connecté (Firebase). Redirection…');
-      if(rememberEl.checked) localStorage.setItem('sn_last_email', email);
+      showLoginSuccess('✅ Connecté (Firebase). Redirection…');
+      localStorage.setItem('sn_last_email', email);
       setTimeout(()=> location.href = 'home.html', 700);
       return;
     } else {
       console.warn('Firebase signin failed:', r.error);
+      showLoginError('Erreur Firebase: ' + (r.error?.message || 'Identifiants incorrects'));
     }
   }
 
   const lr = await localSignIn(email, password);
   if(lr.ok){
-    showLoginSuccess('Connecté (local). Redirection…');
-    if(rememberEl.checked) localStorage.setItem('sn_last_email', email);
+    showLoginSuccess('✅ Connecté (local). Redirection…');
+    localStorage.setItem('sn_last_email', email);
     setTimeout(()=> location.href = 'home.html', 700);
     return;
   } else {
@@ -376,37 +437,47 @@ loginForm.addEventListener('submit', async (ev)=>{
 /* Signup submit */
 signupForm.addEventListener('submit', async (ev)=>{
   ev.preventDefault();
-  signupError.textContent = ''; signupSuccess.textContent = '';
+  signupError.textContent = ''; 
+  signupSuccess.textContent = '';
+  
   const name = firstName.value.trim();
   const surname = lastName.value.trim();
   const email = signupEmail.value.trim();
   const password = signupPassword.value;
   const confirm = signupConfirm.value;
-  const goal = Number(goalCalories.value) || 2000;
-  const activity = Number(activityLevel.value) || 1.55;
 
-  if(!name || !email || !password || !confirm) return showSignupError('Remplis tous les champs requis.');
-  if(password.length < 8) return showSignupError('Le mot de passe doit contenir au moins 8 caractères.');
-  if(password !== confirm) return showSignupError('Les mots de passe ne correspondent pas.');
+  if(!name || !email || !password || !confirm) {
+    return showSignupError('Remplis tous les champs requis.');
+  }
+  if(password.length < 8) {
+    return showSignupError('Le mot de passe doit contenir au moins 8 caractères.');
+  }
+  if(password !== confirm) {
+    return showSignupError('Les mots de passe ne correspondent pas.');
+  }
 
   showSignupSuccess('Création du compte…');
 
-  const profile = { name, surname, goalCalories: goal, activity };
+  const profile = { 
+    name: name + (surname ? ' ' + surname : ''), 
+    goalCalories: 2000
+  };
 
   if(fb.available){
     const r = await firebaseCreateUser(email, password, profile);
     if(r.ok){
-      showSignupSuccess('Compte créé (Firebase). Redirection…');
+      showSignupSuccess('✅ Compte créé (Firebase). Redirection…');
       setTimeout(()=> location.href = 'home.html', 900);
       return;
     } else {
       console.warn('Firebase signup failed:', r.error);
+      showSignupError('Erreur Firebase: ' + (r.error?.message || 'Impossible de créer le compte'));
     }
   }
 
   const lr = await localCreateUser(email, password, profile);
   if(lr.ok){
-    showSignupSuccess('Compte créé (local). Redirection…');
+    showSignupSuccess('✅ Compte créé (local). Redirection…');
     setTimeout(()=> location.href = 'home.html', 800);
     return;
   } else {
@@ -414,22 +485,22 @@ signupForm.addEventListener('submit', async (ev)=>{
   }
 });
 
-/* Guest */
-guestBtn.addEventListener('click', ()=>{
-  const profile = { goalCalories:2000, guest:true };
-  try{ localStorage.setItem('sn_v2_profile', JSON.stringify(profile)); }catch(e){}
-  location.href = 'home.html';
-});
-
 /* Toggle password visibility */
 loginTogglePw.addEventListener('click', ()=>{
-  if(loginPassword.type === 'password'){ loginPassword.type = 'text'; loginTogglePw.textContent = 'Cacher'; }
-  else { loginPassword.type = 'password'; loginTogglePw.textContent = 'Voir'; }
+  if(loginPassword.type === 'password'){ 
+    loginPassword.type = 'text'; 
+    loginTogglePw.textContent = 'Cacher'; 
+  } else { 
+    loginPassword.type = 'password'; 
+    loginTogglePw.textContent = 'Voir'; 
+  }
 });
 
 /* Prefill remembered email */
-try{ const s = localStorage.getItem('sn_last_email'); if(s) loginEmail.value = s; }catch(e){}
+try{ 
+  const s = localStorage.getItem('sn_last_email'); 
+  if(s) loginEmail.value = s; 
+}catch(e){}
 </script>
 </body>
 </html>
-
