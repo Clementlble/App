@@ -2,64 +2,195 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Qook - Chargement</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
   body {
     height: 100vh;
+    height: -webkit-fill-available;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #fff;
+    background: linear-gradient(135deg, #15b79a 0%, #0f9e85 100%);
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Particles flottantes */
+  .particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: float 8s infinite ease-in-out;
+    will-change: transform;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
   }
 
   .splash {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
-    z-index: 2;
+    gap: 40px;
+    z-index: 10;
+    animation: fadeInScale 0.8s ease-out;
+  }
+
+  @keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .logo-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Cercles animés derrière le logo */
+  .pulse-ring {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    will-change: transform, opacity;
+  }
+
+  .pulse-ring:nth-child(2) { animation-delay: 0.5s; }
+  .pulse-ring:nth-child(3) { animation-delay: 1s; }
+
+  @keyframes pulse {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
   }
 
   .logo {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    box-shadow: 0 0 20px rgba(0, 233, 170, 0.4);
+    box-shadow: 
+      0 0 40px rgba(255, 255, 255, 0.3),
+      0 0 80px rgba(21, 183, 154, 0.4),
+      0 20px 60px rgba(0, 0, 0, 0.3);
     position: relative;
-    z-index: 2;
-    opacity: 1;
-    transition: opacity 1s ease;
+    z-index: 11;
+    animation: logoFloat 3s ease-in-out infinite;
+    border: 4px solid rgba(255, 255, 255, 0.8);
+    will-change: transform;
+  }
+
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
   }
 
   .app-name {
-    font-size: 36px;
-    font-weight: 700;
-    color: #00c9a7;
+    font-size: 56px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #fff, #f0f0f0, #fff);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
   }
 
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .tagline {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: -20px;
+    animation: fadeIn 1s ease-out 0.5s backwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Plats qui tournent autour du logo */
   .plat-container {
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 5;
   }
 
   .orbit {
     position: absolute;
-    width: 0; height: 0;
+    width: 0;
+    height: 0;
     transform-origin: center center;
-    animation: rotateOrbit 6s linear infinite;
+    will-change: transform;
+  }
+
+  .orbit:nth-child(1) {
+    animation: rotateOrbit1 8s linear infinite;
+  }
+  .orbit:nth-child(2) {
+    animation: rotateOrbit2 8s linear infinite;
+  }
+  .orbit:nth-child(3) {
+    animation: rotateOrbit3 8s linear infinite;
+  }
+
+  @keyframes rotateOrbit1 {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotateOrbit2 {
+    0% { transform: rotate(120deg); }
+    100% { transform: rotate(480deg); }
+  }
+  @keyframes rotateOrbit3 {
+    0% { transform: rotate(240deg); }
+    100% { transform: rotate(600deg); }
   }
 
   .plat {
@@ -68,47 +199,133 @@
     height: 80px;
     border-radius: 50%;
     background-size: cover;
+    background-position: center;
     top: -40px;
-    left: 120px;
+    left: 180px;
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 255, 255, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    animation: platFloat 3s ease-in-out infinite;
+    will-change: transform;
   }
 
-  /* Images des 3 plats */
-  .plat1 { background-image: url('https://media.istockphoto.com/id/1158019625/fr/vectoriel/bol-de-bouddha-avec-avocat-saumon-concombre-oeufs-pois-chiches-rucola-isol%C3%A9-vue-du-haut.jpg?s=612x612&w=0&k=20&c=oorzBVwIquwUheTtMriFV-G1_tJQTfdg9pVEZVTA_jU='); }
-  .plat2 { background-image: url('https://i.imgur.com/6XkE1Be.png'); }
-  .plat3 { background-image: url('https://i.imgur.com/7P3cWZ1.png'); }
-
-  @keyframes rotateOrbit {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  @keyframes platFloat {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-10px) scale(1.05); }
   }
 
+  .plat1 { 
+    background-image: url('https://media.istockphoto.com/id/1158019625/fr/vectoriel/bol-de-bouddha-avec-avocat-saumon-concombre-oeufs-pois-chiches-rucola-isol%C3%A9-vue-du-haut.jpg?s=612x612&w=0&k=20&c=oorzBVwIquwUheTtMriFV-G1_tJQTfdg9pVEZVTA_jU=');
+    animation-delay: 0s;
+  }
+  .plat2 { 
+    background-image: url('https://static.vecteezy.com/system/resources/previews/002/711/688/non_2x/top-view-of-breakfast-set-in-a-dish-in-cartoon-style-isolated-free-vector.jpg');
+    animation-delay: 0.3s;
+  }
+  .plat3 { 
+    background-image: url('https://i.pinimg.com/736x/a0/33/8a/a0338a7bdf70ee5674a742b6d597ead2.jpg');
+    animation-delay: 0.6s;
+  }
+
+  .loading-text {
+    position: absolute;
+    bottom: 30px;
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    z-index: 10;
+    animation: pulse-text 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-text {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* Animation de sortie */
+  .fade-out {
+    animation: fadeOutScale 1s ease-in forwards;
+  }
+
+  @keyframes fadeOutScale {
+    to { 
+      opacity: 0; 
+      transform: scale(0.8);
+      filter: blur(10px);
+    }
+  }
+
+  /* iPhone optimizations */
+  @supports (-webkit-touch-callout: none) {
+    body { height: -webkit-fill-available; }
+  }
+
+  /* Responsive pour iPhone */
+  @media (max-width: 768px) {
+    .logo { width: 130px; height: 130px; }
+    .app-name { font-size: 48px; }
+    .tagline { font-size: 13px; letter-spacing: 2px; }
+    .pulse-ring { width: 160px; height: 160px; }
+    .plat { width: 70px; height: 70px; top: -35px; left: 130px; }
+  }
+
+  @media (max-width: 390px) {
+    .logo { width: 110px; height: 110px; }
+    .app-name { font-size: 42px; }
+    .tagline { font-size: 12px; }
+    .pulse-ring { width: 140px; height: 140px; }
+    .plat { width: 60px; height: 60px; top: -30px; left: 110px; }
+  }
 </style>
 </head>
 <body>
 
-  <div class="splash">
-    <div class="logo" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/justfit-bed28.firebasestorage.app/o/logoapp.jpg?alt=media&token=85987921-9c3a-445a-979d-9662c2d17e93');"></div>
+  <!-- Particules flottantes -->
+  <div class="particles" id="particles"></div>
+
+  <div class="splash" id="splash">
+    <div class="logo-container">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="logo" style="background-image:url('https://firebasestorage.googleapis.com/v0/b/justfit-bed28.firebasestorage.app/o/logoapp.jpg?alt=media&token=85987921-9c3a-445a-979d-9662c2d17e93');"></div>
+    </div>
+    <div class="app-name">Qook</div>
+    <div class="tagline">Cuisine & Nutrition</div>
   </div>
 
-  <div class="plat-container">
-    <div class="orbit" style="transform: rotate(0deg);"><div class="plat plat1"></div></div>
-    <div class="orbit" style="transform: rotate(120deg);"><div class="plat plat2"></div></div>
-    <div class="orbit" style="transform: rotate(240deg);"><div class="plat plat3"></div></div>
+  <div class="plat-container" id="platContainer">
+    <div class="orbit"><div class="plat plat1"></div></div>
+    <div class="orbit"><div class="plat plat2"></div></div>
+    <div class="orbit"><div class="plat plat3"></div></div>
   </div>
+
+  <div class="loading-text">Préparation de votre expérience...</div>
 
   <script>
-    // Disparaître les plats et fondu du logo après rotation
+    // Génération des particules (réduit pour iPhone)
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = /iPhone|iPad|iPod/.test(navigator.userAgent) ? 15 : 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 8 + 's';
+      particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Animation de sortie après 4 secondes
     setTimeout(() => {
-      document.querySelectorAll('.orbit').forEach(orbit => {
-        orbit.style.transition = 'opacity 1s ease';
-        orbit.style.opacity = 0;
-      });
+      document.getElementById('splash').classList.add('fade-out');
+      document.getElementById('platContainer').classList.add('fade-out');
+      document.querySelector('.loading-text').classList.add('fade-out');
+      
       setTimeout(() => {
-        document.querySelector('.logo').style.transition = 'opacity 1s ease';
-        document.querySelector('.logo').style.opacity = 0;
-        setTimeout(() => {
-          window.location.href = 'auth.html';
-        }, 1000);
+        window.location.href = 'auth.html';
       }, 1000);
     }, 4000);
   </script>
