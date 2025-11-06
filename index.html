@@ -112,6 +112,68 @@
     .nav-item.active{color:var(--accent-2);background:linear-gradient(180deg, rgba(21,183,154,0.06), rgba(21,183,154,0.03))}
     @media (max-width:720px){ .summary-grid{grid-template-columns:repeat(2,1fr)} .calendar .panel{min-width:100%; max-width:100%} }
     /* --- DASHBOARD UI ENHANCEMENT (summary-grid très poussé) --- */
+	 .summary-grid {
+      
+      border-radius: 22px;
+      padding: 18px 12px 12px 12px;
+      margin-bottom: 8px;
+      gap: 18px;
+      position: relative;
+    }
+    .summary-item {
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 10px 14px 10px;
+      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+      cursor: pointer;
+      border: 1.5px solid #00000009;
+      position: relative;
+      overflow: hidden;
+    }
+    .summary-item:hover {
+      transform: translateY(-4px) scale(1.045);
+      box-shadow: 0 8px 32px rgba(21,183,154,0.18), 0 1.5px 0 #b6f2e2;
+      background: linear-gradient(120deg,#e6f9f4 80%,#fff 100%);
+      border-color: #b6f2e2;
+    }
+    .summary-item .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg,#e6f9f4 60%,#fff 100%);
+      color: #15b79a;
+      font-size: 2.1em;
+      font-weight: 700;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(21,183,154,0.08);
+    }
+    .summary-item small {
+      display: block;
+      color: #6c7780;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .summary-item strong {
+      display: block;
+      font-size: 22px;
+      margin-top: 2px;
+      color: #13333a;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      text-shadow: 0 1px 0 #e6f9f4;
+    }
+    @media (max-width: 720px) {
+      .summary-grid { grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 4px; }
+      .summary-item { padding: 12px 6px 10px 6px; }
+      .summary-item .icon { width: 40px; height: 40px; font-size: 1.3em; }
+      .summary-item strong { font-size: 16px; }
+    }
  
   </style>
 </head>
