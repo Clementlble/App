@@ -1671,6 +1671,85 @@ alimentInput.addEventListener('input', function(){
     lastQtyBase = null;
   }
 });
+
+// Remplissage auto des valeurs nutritionnelles depuis la base
+const caloriesInput = document.getElementById('calories');
+const proteinesInput = document.getElementById('proteines');
+const glucidesInput = document.getElementById('glucides');
+const lipidesInput = document.getElementById('lipides');
+
+alimentInput.addEventListener('blur', function() {
+  const val = alimentInput.value.trim().toLowerCase();
+  if(!val) return;
+  // Recherche dans la base ultra-complète
+  const plat = basePlatsComplet.find(p => p.nom.toLowerCase() === val);
+  if(plat) {
+    quantiteInput.value = plat.quantite;
+    caloriesInput.value = plat.cal;
+    proteinesInput.value = plat.p;
+    glucidesInput.value = plat.c;
+    lipidesInput.value = plat.f;
+    document.getElementById('categorie').value = plat.categorie.charAt(0).toUpperCase() + plat.categorie.slice(1);
+  }
+});
+
+// Suggestion dynamique depuis la base ultra-complète
+window.suggestionBox = window.suggestionBox || document.getElementById('suggestionBox');
+if(!window.suggestionBox){
+  window.suggestionBox = document.createElement('div');
+  window.suggestionBox.id = 'suggestionBox';
+  window.suggestionBox.style.position = 'absolute';
+  window.suggestionBox.style.zIndex = '100';
+  window.suggestionBox.style.background = '#fff';
+  window.suggestionBox.style.border = '1px solid #e0f3ef';
+  window.suggestionBox.style.borderRadius = '10px';
+  window.suggestionBox.style.boxShadow = '0 2px 12px rgba(21,183,154,0.08)';
+  window.suggestionBox.style.minWidth = '220px';
+  window.suggestionBox.style.maxHeight = '320px';
+  window.suggestionBox.style.overflowY = 'auto';
+  window.suggestionBox.style.display = 'none';
+  document.body.appendChild(window.suggestionBox);
+}
+
+alimentInput.addEventListener('input', function(e) {
+  const val = alimentInput.value.trim().toLowerCase();
+  if(val.length < 1) { window.suggestionBox.style.display = 'none'; return; }
+  // Recherche dans toute la base
+  const matches = basePlatsComplet.filter(p => p.nom.toLowerCase().includes(val));
+  if(matches.length === 0) { window.suggestionBox.style.display = 'none'; return; }
+  window.suggestionBox.innerHTML = '';
+  matches.slice(0, 20).forEach(plat => {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.alignItems = 'center';
+    row.style.padding = '8px 14px';
+    row.style.cursor = 'pointer';
+    row.style.borderBottom = '1px solid #e0f3ef';
+    row.innerHTML = `<span style='font-weight:500'>${plat.nom}</span> <span style='color:#15b79a;font-size:12px;margin-left:10px'>${plat.cal}kcal | ${plat.p}g P | ${plat.c}g C | ${plat.f}g L</span> <span style='color:#6c7780;font-size:12px;margin-left:10px'>${plat.quantite}</span> <span style='color:#6c7780;font-size:12px;margin-left:10px'>${plat.categorie}</span>`;
+    row.addEventListener('mousedown', function(ev) {
+      alimentInput.value = plat.nom;
+      quantiteInput.value = plat.quantite;
+      caloriesInput.value = plat.cal;
+      proteinesInput.value = plat.p;
+      glucidesInput.value = plat.c;
+      lipidesInput.value = plat.f;
+      document.getElementById('categorie').value = plat.categorie.charAt(0).toUpperCase() + plat.categorie.slice(1);
+      window.suggestionBox.style.display = 'none';
+    });
+    window.suggestionBox.appendChild(row);
+  });
+  // Positionnement sous l'input
+  const rect = alimentInput.getBoundingClientRect();
+  window.suggestionBox.style.left = rect.left + window.scrollX + 'px';
+  window.suggestionBox.style.top = (rect.bottom + window.scrollY + 2) + 'px';
+  window.suggestionBox.style.display = 'block';
+});
+// Masquer la box si on clique ailleurs
+ document.addEventListener('mousedown', function(e){
+   if(!window.suggestionBox.contains(e.target) && e.target !== alimentInput){
+     window.suggestionBox.style.display = 'none';
+   }
+ });
 </script>
 </body>
 </html>
