@@ -354,7 +354,7 @@ loginForm.addEventListener('submit', async (ev)=>{
     if(r.ok){
       showLoginSuccess('Connecté (Firebase). Redirection…');
       if(rememberEl.checked) localStorage.setItem('sn_last_email', email);
-      setTimeout(()=> location.href = 'index.html', 700);
+      setTimeout(()=> location.href = 'home.html', 700);
       return;
     } else {
       console.warn('Firebase signin failed:', r.error);
@@ -365,7 +365,7 @@ loginForm.addEventListener('submit', async (ev)=>{
   if(lr.ok){
     showLoginSuccess('Connecté (local). Redirection…');
     if(rememberEl.checked) localStorage.setItem('sn_last_email', email);
-    setTimeout(()=> location.href = 'index.html', 700);
+    setTimeout(()=> location.href = 'home.html', 700);
     return;
   } else {
     showLoginError('Impossible de se connecter. Vérifie tes identifiants.');
@@ -397,7 +397,7 @@ signupForm.addEventListener('submit', async (ev)=>{
     const r = await firebaseCreateUser(email, password, profile);
     if(r.ok){
       showSignupSuccess('Compte créé (Firebase). Redirection…');
-      setTimeout(()=> location.href = 'index.html', 900);
+      setTimeout(()=> location.href = 'home.html', 900);
       return;
     } else {
       console.warn('Firebase signup failed:', r.error);
@@ -407,7 +407,7 @@ signupForm.addEventListener('submit', async (ev)=>{
   const lr = await localCreateUser(email, password, profile);
   if(lr.ok){
     showSignupSuccess('Compte créé (local). Redirection…');
-    setTimeout(()=> location.href = 'index.html', 800);
+    setTimeout(()=> location.href = 'home.html', 800);
     return;
   } else {
     showSignupError('Impossible de créer le compte : ' + (lr.error?.message || 'erreur'));
@@ -418,7 +418,7 @@ signupForm.addEventListener('submit', async (ev)=>{
 guestBtn.addEventListener('click', ()=>{
   const profile = { goalCalories:2000, guest:true };
   try{ localStorage.setItem('sn_v2_profile', JSON.stringify(profile)); }catch(e){}
-  location.href = 'index.html';
+  location.href = 'home.html';
 });
 
 /* Toggle password visibility */
@@ -432,3 +432,4 @@ try{ const s = localStorage.getItem('sn_last_email'); if(s) loginEmail.value = s
 </script>
 </body>
 </html>
+
