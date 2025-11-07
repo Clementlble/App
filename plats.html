@@ -42,7 +42,14 @@ body {
 .app {
   max-width:900px;
   margin:18px auto;
-  padding:8px 16px;
+  padding:0 16px;
+}
+
+@media (max-width:768px) {
+  .app {
+    padding:0 12px;
+    margin:12px 0;
+  }
 }
 
 header {
@@ -94,11 +101,7 @@ h1 {
   line-height:1.4;
 }
 
-.card {
-  background:var(--card);
-  border-radius:12px;
-  padding:16px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+px rgba(0,0,0,0.04);
   border:1px solid rgba(15,25,30,0.03);
 }
 
@@ -444,9 +447,10 @@ ul.ingredient-list li {
 
 /* iPhone et mobile */
 @media (max-width:768px) {
-  .app {
-    padding:8px 12px;
-    margin:12px auto;
+  .card {
+    border-radius:0;
+    margin:0 -12px;
+    padding:16px 12px;
   }
 
   .recettes-list {
@@ -527,7 +531,7 @@ ul.ingredient-list li {
 <main>
 <section class="card">
 <div id="userGoalNotice" class="goal-notice" style="display:none"></div>
-<input type="text" id="searchBar" placeholder=" Search"/>
+<input type="text" id="searchBar" placeholder="🔍 Search"/>
 <div class="suggestions-carousel" id="suggestionsCarousel"></div>
 <div class="categories-bar" id="categoriesBar"></div>
 <div class="recettes-list" id="recettesList"></div>
