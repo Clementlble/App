@@ -45,13 +45,6 @@ body {
   padding:0 16px;
 }
 
-@media (max-width:768px) {
-  .app {
-    padding:0 12px;
-    margin:12px 0;
-  }
-}
-
 header {
   display:flex;
   align-items:center;
@@ -69,19 +62,6 @@ header {
   min-width:250px;
 }
 
-.logo {
-  width:48px;
-  height:48px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  flex-shrink:0;
-}
-
-
-
 h1 {
   font-size:22px;
   margin:0;
@@ -95,18 +75,15 @@ h1 {
   line-height:1.4;
 }
 
-px rgba(0,0,0,0.04);
-  border:1px solid rgba(15,25,30,0.03);
-}
-
 .categories-bar {
   display:flex;
   gap:10px;
   margin-bottom:20px;
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
-  padding-bottom:4px;
+  padding:4px;
   scrollbar-width: none;
+  scroll-snap-type: x proximity;
 }
 
 .categories-bar::-webkit-scrollbar {
@@ -122,9 +99,15 @@ px rgba(0,0,0,0.04);
   font-weight:500;
   cursor:pointer;
   font-size:14px;
-  transition:all 0.2s;
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space:nowrap;
   flex-shrink:0;
+  scroll-snap-align: start;
+}
+
+.cat-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
 
 .cat-btn.active {
@@ -146,8 +129,13 @@ px rgba(0,0,0,0.04);
   box-shadow:0 2px 12px rgba(0,0,0,0.06);
   border:1px solid #f0f0f0;
   overflow:hidden;
-  transition:all 0.2s;
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position:relative;
+}
+
+.recette-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.12);
 }
 
 .recette-card:active {
@@ -166,6 +154,11 @@ px rgba(0,0,0,0.04);
   height:100%;
   object-fit:cover;
   display:block;
+  transition:transform 0.5s ease;
+}
+
+.recette-card:hover .recette-img {
+  transform:scale(1.1);
 }
 
 .recipe-badge {
@@ -294,12 +287,17 @@ ul.ingredient-list li {
   font-weight:600;
   cursor:pointer;
   font-size:14px;
-  transition:all 0.2s;
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex:1;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:8px;
+}
+
+.btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(255,99,71,0.3);
 }
 
 .btn:active {
@@ -314,6 +312,10 @@ ul.ingredient-list li {
   border:1px solid #e0e0e0;
   flex:0;
   min-width:48px;
+}
+
+.btn.fav:hover {
+  transform:scale(1.1);
 }
 
 .btn.fav.active {
@@ -365,11 +367,13 @@ ul.ingredient-list li {
   font-size:15px;
   background:#fff;
   -webkit-appearance:none;
+  transition:all 0.3s ease;
 }
 
 #searchBar:focus {
   outline:none;
   border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(21,183,154,0.1);
 }
 
 .suggestions-carousel {
@@ -377,10 +381,11 @@ ul.ingredient-list li {
   overflow-x:auto;
   gap:14px;
   margin-bottom:20px;
-  padding-bottom:8px;
+  padding:4px;
   scroll-behavior:smooth;
   -webkit-overflow-scrolling:touch;
   scrollbar-width: none;
+  scroll-snap-type: x proximity;
 }
 
 .suggestions-carousel::-webkit-scrollbar {
@@ -395,8 +400,14 @@ ul.ingredient-list li {
   box-shadow:0 2px 10px rgba(0,0,0,0.06);
   border:1px solid #f0f0f0;
   cursor:pointer;
-  transition:all 0.2s;
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow:hidden;
+  scroll-snap-align: start;
+}
+
+.suggestion-card:hover {
+  transform:translateY(-4px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
 }
 
 .suggestion-card:active {
@@ -439,12 +450,220 @@ ul.ingredient-list li {
   display:inline-block;
 }
 
+/* Modal */
+.modal-overlay {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.7);
+  z-index:1000;
+  display:none;
+  animation:fadeIn 0.3s ease;
+}
+
+.modal-overlay.active {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+.modal-content {
+  background:#fff;
+  border-radius:20px;
+  max-width:600px;
+  width:100%;
+  max-height:90vh;
+  overflow-y:auto;
+  position:relative;
+  animation:slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-overflow-scrolling:touch;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity:0; 
+    transform:translateY(50px) scale(0.9);
+  }
+  to { 
+    opacity:1; 
+    transform:translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  position:relative;
+  height:250px;
+  overflow:hidden;
+}
+
+.modal-header img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.modal-close {
+  position:absolute;
+  top:16px;
+  right:16px;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.95);
+  border:none;
+  font-size:24px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#333;
+  backdrop-filter:blur(4px);
+  transition:all 0.2s;
+  z-index:10;
+}
+
+.modal-close:hover {
+  transform:scale(1.1);
+  background:#fff;
+}
+
+.modal-body {
+  padding:24px;
+}
+
+.modal-title {
+  font-size:24px;
+  font-weight:700;
+  color:#1a1a1a;
+  margin:0 0 12px 0;
+  line-height:1.3;
+}
+
+.modal-meta {
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+
+.modal-section {
+  margin-top:24px;
+}
+
+.modal-section-title {
+  font-size:18px;
+  font-weight:700;
+  color:#1a1a1a;
+  margin:0 0 12px 0;
+}
+
+.modal-ingredients {
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.modal-ingredients li {
+  padding:10px 14px;
+  background:#f8f9fa;
+  border-radius:8px;
+  margin-bottom:8px;
+  font-size:14px;
+  color:#333;
+}
+
+.modal-steps {
+  list-style:none;
+  padding:0;
+  margin:0;
+  counter-reset:step-counter;
+}
+
+.modal-steps li {
+  padding:16px;
+  background:#f8f9fa;
+  border-radius:12px;
+  margin-bottom:12px;
+  font-size:14px;
+  color:#333;
+  line-height:1.6;
+  counter-increment:step-counter;
+  position:relative;
+  padding-left:60px;
+}
+
+.modal-steps li::before {
+  content:counter(step-counter);
+  position:absolute;
+  left:16px;
+  top:16px;
+  width:32px;
+  height:32px;
+  background:var(--orange);
+  color:#fff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:14px;
+}
+
+.modal-actions {
+  margin-top:24px;
+  display:flex;
+  gap:12px;
+}
+
+.modal-btn {
+  flex:1;
+  padding:14px 24px;
+  border-radius:28px;
+  border:none;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  transition:all 0.3s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+
+.modal-btn-primary {
+  background:var(--orange);
+  color:#fff;
+}
+
+.modal-btn-primary:hover {
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(255,99,71,0.3);
+}
+
+.modal-btn-secondary {
+  background:#f8f9fa;
+  color:#333;
+  border:1px solid #e0e0e0;
+}
+
+.modal-btn-secondary:hover {
+  background:#e9ecef;
+}
+
 /* iPhone et mobile */
 @media (max-width:768px) {
-  .card {
-    border-radius:0;
-    margin:0 -12px;
-    padding:16px 12px;
+  .app {
+    padding:0 12px;
+    margin:12px 0;
   }
 
   .recettes-list {
@@ -471,6 +690,23 @@ ul.ingredient-list li {
   .brand {
     min-width:auto;
   }
+
+  .modal-content {
+    max-height:95vh;
+    border-radius:20px 20px 0 0;
+  }
+
+  .modal-header {
+    height:200px;
+  }
+
+  .modal-body {
+    padding:20px 16px;
+  }
+
+  .modal-title {
+    font-size:20px;
+  }
 }
 
 @media (max-width:390px) {
@@ -485,10 +721,6 @@ ul.ingredient-list li {
   .btn {
     font-size:13px;
     padding:10px 16px;
-  }
-
-  .card {
-    padding:12px;
   }
 
   .suggestion-card {
@@ -509,7 +741,6 @@ ul.ingredient-list li {
 <div class="app">
 <header>
 <div class="brand">
-
 <div>
 <h1>Recettes</h1>
 <p class="hint">Retrouve ici un large choix de recettes avec leur préparation</p>
@@ -532,7 +763,42 @@ ul.ingredient-list li {
 </main>
 </div>
 
+<!-- Modal -->
+<div class="modal-overlay" id="recetteModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <img id="modalImage" src="" alt="Recipe"/>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-meta" id="modalMeta"></div>
+      
+      <div class="modal-section">
+        <h3 class="modal-section-title">Ingrédients</h3>
+        <ul class="modal-ingredients" id="modalIngredients"></ul>
+      </div>
+      
+      <div class="modal-section">
+        <h3 class="modal-section-title">Préparation</h3>
+        <ul class="modal-steps" id="modalSteps"></ul>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-primary" onclick="copyCurrentRecette()">
+          📋 Copier la recette
+        </button>
+        <button class="modal-btn modal-btn-secondary" onclick="toggleCurrentFav()">
+          <span id="modalFavIcon">☆</span> Favoris
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+let currentModalRecette = null;
+
 // Fonctions de favoris et filtre
 function getFavList(){
   try{
@@ -615,7 +881,7 @@ function renderSuggestions(plats){
   plats.slice(0,10).forEach(p=>{
     const card=document.createElement('div');
     card.className='suggestion-card';
-    card.onclick=()=>scrollToRecette(p.nom);
+    card.onclick=()=>openRecetteModal(p.nom);
     card.innerHTML=`<img src="${p.image}" alt="${p.nom}"/><div class="suggestion-title">${p.nom}</div>`;
     carousel.appendChild(card);
   });
@@ -640,6 +906,77 @@ function badgeFor(rec,goal){
     badges.push(`<span class="badge-fit badge-leger">Boisson</span>`);
   return badges.join('');
 }
+
+function openRecetteModal(nom){
+  const recette=currentPlats.find(r=>r.nom===nom);
+  if(!recette)return;
+  
+  currentModalRecette = recette;
+  
+  document.getElementById('modalImage').src=recette.image;
+  document.getElementById('modalTitle').textContent=recette.nom;
+  
+  const macros=recette.macros?`${recette.macros.cal}kcal • ${recette.macros.p}g P • ${recette.macros.c}g C • ${recette.macros.f}g L`:'';
+  const rating='4.7';
+  
+  document.getElementById('modalMeta').innerHTML=`
+    <div class="rating">
+      <span>⭐</span>
+      <span>${rating}</span>
+      <span style="color:#999;font-weight:400">(7.4k ratings)</span>
+    </div>
+    <div style="color:#666">⏱ ${recette.temps||'30'} Min</div>
+    <div style="color:#666">👤 1 personne</div>
+    <div style="color:var(--accent);font-weight:600">${macros}</div>
+  `;
+  
+  const ingredientsList=document.getElementById('modalIngredients');
+  ingredientsList.innerHTML='';
+  recette.ingredients.forEach(ing=>{
+    const li=document.createElement('li');
+    li.textContent=ing;
+    ingredientsList.appendChild(li);
+  });
+  
+  const stepsList=document.getElementById('modalSteps');
+  stepsList.innerHTML='';
+  recette.etapes.forEach(step=>{
+    const li=document.createElement('li');
+    li.textContent=step;
+    stepsList.appendChild(li);
+  });
+  
+  const favIcon=document.getElementById('modalFavIcon');
+  favIcon.textContent=isFav(recette.nom)?'★':'☆';
+  
+  document.getElementById('recetteModal').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('recetteModal').classList.remove('active');
+  document.body.style.overflow='';
+  currentModalRecette=null;
+}
+
+function copyCurrentRecette(){
+  if(!currentModalRecette)return;
+  const recette=currentModalRecette;
+  const text=`${recette.nom}\nCatégorie: ${recette.categorie}\nMacros: ${recette.macros?.cal}kcal, ${recette.macros?.p}g P, ${recette.macros?.c}g C, ${recette.macros?.f}g L\nTemps: ${recette.temps||'-'} min\n\nIngrédients:\n- ${recette.ingredients.join('\n- ')}\n\nPréparation:\n${recette.etapes.map((e,i)=>`${i+1}. ${e}`).join('\n')}`;
+  navigator.clipboard.writeText(text).then(()=>alert("✅ Recette copiée !")).catch(()=>alert("❌ Erreur lors de la copie"));
+}
+
+function toggleCurrentFav(){
+  if(!currentModalRecette)return;
+  toggleFav(currentModalRecette.nom);
+  const favIcon=document.getElementById('modalFavIcon');
+  favIcon.textContent=isFav(currentModalRecette.nom)?'★':'☆';
+}
+
+// Fermer modal en cliquant sur l'overlay
+document.getElementById('recetteModal').addEventListener('click',(e)=>{
+  if(e.target.id==='recetteModal')closeModal();
+});
 
 function renderRecettesList(list,typeFilter='',search=''){
   const goal=userCalGoal;
@@ -681,7 +1018,7 @@ function renderRecettesList(list,typeFilter='',search=''){
         <div class="section-sub">Préparation</div>
         <ol class="steps-list">${recette.etapes.slice(0,3).map(e=>`<li>${e}</li>`).join('')}${recette.etapes.length>3?'<li>...</li>':''}</ol>
         <div class="recette-actions">
-          <button class="btn" onclick="copyRecette('${recette.nom}')">
+          <button class="btn" onclick="openRecetteModal('${recette.nom}')">
             View details
             <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
           </button>
@@ -732,4 +1069,3 @@ fetch('recettes.json')
 </script>
 </body>
 </html>
-
