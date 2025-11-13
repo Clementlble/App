@@ -386,6 +386,15 @@ body {
     <img class="recipe-image" id="recipeImage" src="" alt="Recipe"/>
   </div>
 
+  <div class="servings-section">
+    <span class="servings-label">Nombre de personnes :</span>
+    <div class="servings-controls">
+      <button class="servings-btn" onclick="changeServings(-1)" id="decreaseBtn">−</button>
+      <span class="servings-value" id="servingsValue">1</span>
+      <button class="servings-btn" onclick="changeServings(1)" id="increaseBtn">+</button>
+    </div>
+  </div>
+
   <div class="macros-grid" id="macrosGrid"></div>
 
   <div class="tabs">
@@ -400,6 +409,9 @@ body {
 </div>
 
 <script>
+let currentServings = 1;
+let originalRecette = null;
+
 const ingredientIcons = {
   'yaourt': '🥛', 'gingembre': '🧄', 'ail': '🧄', 'citron': '🍋', 'chaat': '🌶️', 
   'cumin': '🌿', 'garam': '🌶️', 'piment': '🌶️', 'curcuma': '🌿', 'sel': '🧂', 
@@ -436,47 +448,104 @@ function switchTab(tab) {
   document.getElementById(tab + 'Tab').classList.add('active');
 }
 
-// Charger la recette depuis sessionStorage
-const recetteStr = sessionStorage.getItem('currentRecette');
-if (!recetteStr) {
-  window.location.href = 'plats.html';
-} else {
-  const recette = JSON.parse(recetteStr);
+function parseQuantity(quantityStr) {
+  // Extraire le nombre de la quantité (ex: "200g" -> 200, "1/2 cup" -> 0.5)
+  const match = quantityStr.match(/(\d+\.?\d*|\d*\/\d+)/);
+  if (!match) return null;
   
-  // Titre et image
-  document.getElementById('recipeTitle').textContent = recette.nom;
-  document.getElementById('recipeImage').src = recette.image;
-  document.getElementById('recipeImage').alt = recette.nom;
+  const numStr = match[1];
+  if (numStr.includes('/')) {
+    const [num, den] = numStr.split('/').map(Number);
+    return num / den;
+  }
+  return parseFloat(numStr);
+}
+
+function multiplyQuantity(quantityStr, multiplier) {
+  const quantity = parseQuantity(quantityStr);
+  if (quantity === null) return quantityStr;
   
-  // Macros
-  const macros = recette.macros || {cal:320, p:30, c:20, f:15};
+  const newQuantity = quantity * multiplier;
+  const unit = quantityStr.replace(/[\d\s\/\.]+/, '').trim();
+  
+  // Formater le nombre (arrondir si nécessaire)
+  const formatted = newQuantity % 1 === 0 ? newQuantity : newQuantity.toFixed(1);
+  
+  return `${formatted} ${unit}`;
+}
+
+function changeServings(delta) {
+  const newServings = currentServings + delta;
+  if (newServings < 1 || newServings > 10) return;
+  
+  currentServings = newServings;
+  document.getElementById('servingsValue').textContent = currentServings;
+  
+  // Mettre à jour le bouton - (désactiver si = 1)
+  document.getElementById('decreaseBtn').disabled = currentServings === 1;
+  document.getElementById('increaseBtn').disabled = currentServings === 10;
+  
+  // Recalculer et afficher les ingrédients
+  renderIngredients();
+  
+  // Recalculer les macros
+  renderMacros();
+}
+
+function renderMacros() {
+  const macros = originalRecette.macros || {cal:320, p:30, c:20, f:15};
+  const multiplier = currentServings;
+  
   const macrosHtml = 
-    drawMacro(macros.cal, 'kcal', 'Calories', '#4caf50') +
-    drawMacro(macros.c, 'g', 'Glucides', '#ff9800') +
-    drawMacro(macros.p, 'g', 'Protéines', '#2196f3') +
-    drawMacro(macros.f, 'g', 'Lipides', '#f44336');
+    drawMacro(Math.round(macros.cal * multiplier), 'kcal', 'Calories', '#4caf50') +
+    drawMacro(Math.round(macros.c * multiplier), 'g', 'Glucides', '#ff9800') +
+    drawMacro(Math.round(macros.p * multiplier), 'g', 'Protéines', '#2196f3') +
+    drawMacro(Math.round(macros.f * multiplier), 'g', 'Lipides', '#f44336');
   
   document.getElementById('macrosGrid').innerHTML = macrosHtml;
-  
-  // Ingrédients
-  const ingredientsHtml = recette.ingredients.map(ing => {
+}
+
+function renderIngredients() {
+  const ingredientsHtml = originalRecette.ingredients.map(ing => {
     const parts = ing.split('-');
     const name = parts[0].trim();
     const quantity = parts[1]?.trim() || '1 portion';
+    
+    const adjustedQuantity = multiplyQuantity(quantity, currentServings);
+    
     return `
       <div class="ingredient-item">
         <div class="ingredient-icon">${getIngredientIcon(name)}</div>
         <div class="ingredient-info">
           <div class="ingredient-name">${name}</div>
         </div>
-        <div class="ingredient-quantity">${quantity}</div>
+        <div class="ingredient-quantity">${adjustedQuantity}</div>
       </div>
     `;
   }).join('');
   document.getElementById('ingredientsTab').innerHTML = ingredientsHtml;
+}
+
+// Charger la recette depuis sessionStorage
+const recetteStr = sessionStorage.getItem('currentRecette');
+if (!recetteStr) {
+  window.location.href = 'plats.html';
+} else {
+  originalRecette = JSON.parse(recetteStr);
   
-  // Instructions
-  const instructionsHtml = recette.etapes.map((step, i) => `
+  // Titre et image
+  document.getElementById('recipeTitle').textContent = originalRecette.nom;
+  document.getElementById('recipeImage').src = originalRecette.image;
+  document.getElementById('recipeImage').alt = originalRecette.nom;
+  
+  // Macros initiaux
+  renderMacros();
+  
+  // Ingrédients initiaux
+  renderIngredients();
+  
+  // Instructions (ne changent pas avec le nombre de personnes)
+  const instructionsHtml = originalRecette.etapes.map((step, i) => `
     <div class="instruction-item">
       <div class="instruction-header">
         <div class="instruction-number">${i + 1}</div>
