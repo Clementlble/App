@@ -82,11 +82,12 @@ h1 {
   display:flex;
   gap:10px;
   margin-bottom:16px;
-  align-items:center;
+  align-items:stretch;
 }
 
 .search-container {
   flex:1;
+  display:flex;
 }
 
 #searchBar {
@@ -98,6 +99,7 @@ h1 {
   background:#fff;
   -webkit-appearance:none;
   transition:all 0.3s ease;
+  height:48px;
 }
 
 #searchBar:focus {
@@ -107,8 +109,8 @@ h1 {
 }
 
 .filter-toggle-btn {
-  padding:14px 20px;
-  border-radius:28px;
+  padding:0;
+  border-radius:50%;
   border:1px solid #e0e0e0;
   background:#fff;
   color:#333;
@@ -119,17 +121,29 @@ h1 {
   white-space:nowrap;
   display:flex;
   align-items:center;
-  gap:8px;
+  justify-content:center;
+  width:48px;
+  height:48px;
+  flex-shrink:0;
+}
+
+.filter-toggle-btn svg {
+  width:20px;
+  height:20px;
 }
 
 .filter-toggle-btn:hover {
   background:#f8f9fa;
+  transform:scale(1.05);
 }
 
 .filter-toggle-btn.active {
   background:var(--orange);
-  color:#fff;
   border-color:var(--orange);
+}
+
+.filter-toggle-btn.active svg {
+  fill:#fff;
 }
 
 /* Filtres */
@@ -201,45 +215,7 @@ h1 {
 }
 
 .categories-bar {
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  padding:4px;
-  scrollbar-width: none;
-  scroll-snap-type: x proximity;
-}
-
-.categories-bar::-webkit-scrollbar {
   display:none;
-}
-
-.cat-btn {
-  padding:10px 24px;
-  border-radius:24px;
-  border:1px solid #e0e0e0;
-  background:#fff;
-  color:#333;
-  font-weight:500;
-  cursor:pointer;
-  font-size:14px;
-  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space:nowrap;
-  flex-shrink:0;
-  scroll-snap-align: start;
-}
-
-.cat-btn:hover {
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-
-.cat-btn.active {
-  background:var(--orange);
-  color:#fff;
-  border-color:var(--orange);
-  box-shadow:0 4px 12px rgba(255,99,71,0.25);
 }
 
 .recettes-list {
@@ -310,23 +286,6 @@ h1 {
   color:#1a1a1a;
   margin:0 0 8px;
   line-height:1.4;
-}
-
-.recette-meta {
-  display:flex;
-  align-items:center;
-  gap:16px;
-  margin-bottom:12px;
-  font-size:13px;
-  color:#666;
-}
-
-.rating {
-  display:flex;
-  align-items:center;
-  gap:4px;
-  color:#ffa500;
-  font-weight:600;
 }
 
 .recette-macros {
@@ -549,49 +508,15 @@ h1 {
 }
 
 .modal-rating {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:20px;
-}
-
-.rating-stars {
-  color:#ffa500;
-  font-size:18px;
-  font-weight:700;
-}
-
-.rating-text {
-  color:#666;
-  font-size:14px;
-}
-
-.modal-image {
-  width:100%;
-  height:220px;
-  object-fit:cover;
-  border-radius:16px;
-  margin-bottom:20px;
-}
-
-.modal-description {
-  font-size:14px;
-  color:#666;
-  line-height:1.6;
-  margin-bottom:20px;
-}
-
-.view-more {
-  color:var(--orange);
-  font-weight:600;
-  cursor:pointer;
+  display:none;
 }
 
 .macros-grid {
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:12px;
+  display:flex;
+  justify-content:space-around;
+  gap:8px;
   margin-bottom:24px;
+  padding:0 10px;
 }
 
 .macro-item {
@@ -821,10 +746,12 @@ h1 {
 <section class="card">
 <div class="search-filter-row">
   <div class="search-container">
-    <input type="text" id="searchBar" placeholder=" Rechercher une recette..."/>
+    <input type="text" id="searchBar" placeholder="🔍 Rechercher une recette..."/>
   </div>
-  <button class="filter-toggle-btn" id="filterToggle" onclick="toggleFilters()">
-     Filtres
+  <button class="filter-toggle-btn" id="filterToggle" onclick="toggleFilters()" aria-label="Filtres">
+    <svg viewBox="0 0 24 24" fill="#333">
+      <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+    </svg>
   </button>
 </div>
 
@@ -840,7 +767,6 @@ h1 {
 </div>
 
 <div class="suggestions-carousel" id="suggestionsCarousel"></div>
-<div class="categories-bar" id="categoriesBar"></div>
 <div class="recettes-list" id="recettesList"></div>
 <div id="loader"></div>
 </section>
@@ -854,15 +780,7 @@ h1 {
       <button class="modal-close" onclick="closeModal()">×</button>
       <h2 class="modal-title" id="modalTitle"></h2>
       <div class="modal-tags" id="modalTags"></div>
-      <div class="modal-rating">
-        <span class="rating-stars" id="modalRating">⭐ 4.4</span>
-        <span class="rating-text">(6.4k ratings)</span>
-      </div>
-      <img class="modal-image" id="modalImage" src="" alt="Recipe"/>
-      <p class="modal-description" id="modalDescription">
-        A quick and flavorful dish made by whisking eggs and stir-frying them with light seasoning. 
-        <span class="view-more">View More</span>
-      </p>
+      <img class="modal-image" id="modalImage" src="" alt="Recipe" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:20px;"/>
     </div>
 
     <div class="macros-grid" id="modalMacros"></div>
@@ -913,13 +831,16 @@ function toggleFilters() {
   filtersVisible = !filtersVisible;
   const panel = document.getElementById('filtersPanel');
   const btn = document.getElementById('filterToggle');
+  const svg = btn.querySelector('svg');
   
   if(filtersVisible) {
     panel.classList.add('show');
     btn.classList.add('active');
+    svg.setAttribute('fill', '#fff');
   } else {
     panel.classList.remove('show');
     btn.classList.remove('active');
+    svg.setAttribute('fill', '#333');
   }
 }
 
@@ -989,33 +910,6 @@ function filterByCategory(category){
   activeFilters.category = category;
   renderFilters();
   renderRecettesList(currentPlats);
-}
-
-function renderCategoriesBar(categories,activeType){
-  const bar=document.getElementById('categoriesBar');
-  bar.innerHTML='';
-  const allBtn = document.createElement('button');
-  allBtn.className='cat-btn'+(activeType===null?' active':'');
-  allBtn.textContent='Tous';
-  allBtn.onclick=()=>{
-    activeFilters.type = null;
-    renderCategoriesBar(categories,null);
-    renderRecettesList(currentPlats);
-  };
-  bar.appendChild(allBtn);
-  
-  categories.forEach(cat=>{
-    const btn=document.createElement('button');
-    btn.className='cat-btn'+(activeType===cat.type?' active':'');
-    btn.dataset.type=cat.type;
-    btn.textContent=cat.label;
-    btn.onclick=()=>{
-      activeFilters.type=btn.dataset.type;
-      renderCategoriesBar(categories,activeFilters.type);
-      renderRecettesList(currentPlats);
-    };
-    bar.appendChild(btn);
-  });
 }
 
 function renderSuggestions(plats){
@@ -1158,13 +1052,6 @@ function renderRecettesList(list){
       </div>
       <div class="recette-content">
         <div class="recette-title">${recette.nom}</div>
-        <div class="recette-meta">
-          <div class="rating">
-            <span>⭐</span>
-            <span>4.7</span>
-            <span style="color:#999;font-weight:400">(7.4k avis)</span>
-          </div>
-        </div>
         ${recette.temps?`<div style="font-size:13px;color:#666;margin-bottom:8px">⏱ ${recette.temps} Min • 👤 1 pers</div>`:''}
         <div class="recette-macros">${macros}</div>
       </div>
@@ -1188,13 +1075,7 @@ fetch('recettes.json')
     const recettes=filtreNonVeg(data);
     currentPlats=recettes;
     
-    const categories=Object.entries(recettes.reduce((acc,r)=>{
-      acc[r.categorie]=r.type;
-      return acc;
-    },{})).map(([label,type])=>({label,type}));
-    
     renderFilters();
-    renderCategoriesBar(categories,null);
     renderRecettesList(recettes);
     
     document.getElementById('recettesList').style.display='';
