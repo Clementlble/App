@@ -746,7 +746,7 @@ h1 {
 <section class="card">
 <div class="search-filter-row">
   <div class="search-container">
-    <input type="text" id="searchBar" placeholder="🔍 Rechercher une recette..."/>
+    <input type="text" id="searchBar" placeholder=" Rechercher une recette..."/>
   </div>
   <button class="filter-toggle-btn" id="filterToggle" onclick="toggleFilters()" aria-label="Filtres">
     <svg viewBox="0 0 24 24" fill="#333">
@@ -888,7 +888,7 @@ function renderFilters(){
   const cuisineBar = document.getElementById('cuisineFilters');
   const categoryBar = document.getElementById('categoryFilters');
   
-  cuisineBar.innerHTML = '<button class="filter-btn'+(activeFilters.cuisine===null?' active':'')+'" onclick="filterByCuisine(null)">🌍 Toutes</button>';
+  cuisineBar.innerHTML = '<button class="filter-btn'+(activeFilters.cuisine===null?' active':'')+'" onclick="filterByCuisine(null)"> Toutes</button>';
   cuisineTypes.forEach(cuisine => {
     cuisineBar.innerHTML += `<button class="filter-btn${activeFilters.cuisine===cuisine?' active':''}" onclick="filterByCuisine('${cuisine}')">${cuisine}</button>`;
   });
@@ -1086,4 +1086,5 @@ fetch('recettes.json')
 </script>
 </body>
 </html>
+
 
