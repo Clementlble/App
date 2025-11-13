@@ -1,4 +1,4 @@
-<!DOCTYPE html
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8" />
@@ -11,14 +11,9 @@
 :root{ 
   --bg:#f7f8fa; 
   --card:#fff; 
-  --accent:#15b79a; 
-  --accent-2:#0f9e85; 
-  --muted:#6c7780; 
-  --danger:#e74c3c; 
+  --accent:#ff6347; 
   --orange:#ff6347;
-  --yellow:#ffc107;
-  --green:#4caf50;
-  --blue:#2196f3;
+  --muted:#6c7780; 
   --radius:18px;
 }
 
@@ -105,7 +100,7 @@ h1 {
 #searchBar:focus {
   outline:none;
   border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(21,183,154,0.1);
+  box-shadow:0 0 0 3px rgba(255,99,71,0.1);
 }
 
 .filter-toggle-btn {
@@ -113,12 +108,8 @@ h1 {
   border-radius:50%;
   border:1px solid #e0e0e0;
   background:#fff;
-  color:#333;
-  font-weight:600;
   cursor:pointer;
-  font-size:15px;
   transition:all 0.3s;
-  white-space:nowrap;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -146,7 +137,6 @@ h1 {
   fill:#fff;
 }
 
-/* Filtres */
 .filters-panel {
   background:#fff;
   border-radius:16px;
@@ -198,9 +188,6 @@ h1 {
   font-size:13px;
   transition:all 0.3s;
   white-space:nowrap;
-  display:flex;
-  align-items:center;
-  gap:6px;
 }
 
 .filter-btn:hover {
@@ -212,10 +199,6 @@ h1 {
   background:var(--orange);
   color:#fff;
   border-color:var(--orange);
-}
-
-.categories-bar {
-  display:none;
 }
 
 .recettes-list {
@@ -231,8 +214,10 @@ h1 {
   border:1px solid #f0f0f0;
   overflow:hidden;
   transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position:relative;
   cursor:pointer;
+  text-decoration:none;
+  color:inherit;
+  display:block;
 }
 
 .recette-card:hover {
@@ -291,26 +276,8 @@ h1 {
 .recette-macros {
   font-size:13px;
   color:var(--accent);
-  margin-bottom:12px;
+  margin-bottom:8px;
   font-weight:500;
-}
-
-#searchBar {
-  width:100%;
-  padding:14px 18px;
-  margin-bottom:16px;
-  border-radius:28px;
-  border:1px solid #e0e0e0;
-  font-size:15px;
-  background:#fff;
-  -webkit-appearance:none;
-  transition:all 0.3s ease;
-}
-
-#searchBar:focus {
-  outline:none;
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(21,183,154,0.1);
 }
 
 .suggestions-carousel {
@@ -397,285 +364,6 @@ h1 {
   to { transform:rotate(360deg); }
 }
 
-/* Modal */
-.modal-overlay {
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background:rgba(0,0,0,0.7);
-  z-index:1000;
-  display:none;
-  animation:fadeIn 0.3s ease;
-}
-
-.modal-overlay.active {
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  overflow-y:auto;
-  padding:20px;
-}
-
-@keyframes fadeIn {
-  from { opacity:0; }
-  to { opacity:1; }
-}
-
-.modal-content {
-  background:#fff;
-  border-radius:20px;
-  max-width:500px;
-  width:100%;
-  position:relative;
-  animation:slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  margin:auto;
-}
-
-@keyframes slideUp {
-  from { 
-    opacity:0; 
-    transform:translateY(50px) scale(0.9);
-  }
-  to { 
-    opacity:1; 
-    transform:translateY(0) scale(1);
-  }
-}
-
-.modal-header {
-  position:relative;
-  padding:24px 20px 20px;
-}
-
-.modal-close {
-  position:absolute;
-  top:16px;
-  right:16px;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.95);
-  border:none;
-  font-size:24px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#333;
-  backdrop-filter:blur(4px);
-  transition:all 0.2s;
-  z-index:10;
-}
-
-.modal-close:hover {
-  transform:scale(1.1);
-  background:#fff;
-}
-
-.modal-title {
-  font-size:28px;
-  font-weight:800;
-  color:#1a1a1a;
-  margin:0 0 12px 0;
-  line-height:1.2;
-  padding-right:40px;
-}
-
-.modal-tags {
-  display:flex;
-  gap:8px;
-  margin-bottom:16px;
-  flex-wrap:wrap;
-}
-
-.modal-tag {
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:600;
-}
-
-.tag-cuisine {
-  background:#e3f2fd;
-  color:#1976d2;
-}
-
-.tag-category {
-  background:#fff3e0;
-  color:#f57c00;
-}
-
-.modal-rating {
-  display:none;
-}
-
-.macros-grid {
-  display:flex;
-  justify-content:space-between;
-  gap:4px;
-  margin-bottom:24px;
-  padding:0 4px;
-}
-
-.macro-item {
-  text-align:center;
-  flex:1;
-}
-
-.macro-circle {
-  width:70px;
-  height:70px;
-  margin:0 auto 8px;
-  position:relative;
-}
-
-.macro-circle svg {
-  transform:rotate(-90deg);
-  width:70px;
-  height:70px;
-}
-
-.macro-value {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  font-size:15px;
-  font-weight:700;
-  color:#1a1a1a;
-  line-height:1.2;
-  text-align:center;
-}
-
-.macro-unit {
-  font-size:10px;
-  font-weight:500;
-  margin-top:2px;
-}
-
-.macro-label {
-  font-size:11px;
-  color:#666;
-  font-weight:600;
-}
-
-.modal-tabs {
-  display:flex;
-  gap:12px;
-  margin-bottom:20px;
-  border-bottom:2px solid #f0f0f0;
-}
-
-.modal-tab {
-  padding:12px 24px;
-  border:none;
-  background:transparent;
-  color:#666;
-  font-weight:600;
-  font-size:15px;
-  cursor:pointer;
-  transition:all 0.3s;
-  border-bottom:3px solid transparent;
-  margin-bottom:-2px;
-}
-
-.modal-tab.active {
-  color:var(--orange);
-  border-bottom-color:var(--orange);
-}
-
-.modal-body {
-  padding:0 20px 24px;
-}
-
-.tab-content {
-  display:none;
-}
-
-.tab-content.active {
-  display:block;
-  animation:fadeInContent 0.3s ease;
-}
-
-@keyframes fadeInContent {
-  from { opacity:0; transform:translateY(10px); }
-  to { opacity:1; transform:translateY(0); }
-}
-
-.ingredient-item {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  background:#fff;
-  border-radius:12px;
-  margin-bottom:10px;
-  border:1px solid #f0f0f0;
-}
-
-.ingredient-icon {
-  width:36px;
-  height:36px;
-  font-size:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.ingredient-info {
-  flex:1;
-}
-
-.ingredient-name {
-  font-size:15px;
-  font-weight:600;
-  color:#1a1a1a;
-  margin-bottom:2px;
-}
-
-.ingredient-quantity {
-  font-size:13px;
-  color:#999;
-  text-align:right;
-  font-weight:500;
-}
-
-.instruction-item {
-  margin-bottom:20px;
-}
-
-.instruction-header {
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-  margin-bottom:10px;
-}
-
-.instruction-number {
-  width:32px;
-  height:32px;
-  background:var(--orange);
-  color:#fff;
-  border-radius:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  font-size:16px;
-  flex-shrink:0;
-}
-
-.instruction-text {
-  flex:1;
-  font-size:14px;
-  color:#333;
-  line-height:1.6;
-  padding-top:4px;
-}
-
-/* iPhone et mobile */
 @media (max-width:768px) {
   .app {
     padding:0 12px;
@@ -693,30 +381,6 @@ h1 {
 
   .hint {
     font-size:12px;
-  }
-
-  .modal-content {
-    max-width:100%;
-    border-radius:20px 20px 0 0;
-    margin:auto auto 0;
-  }
-
-  .modal-title {
-    font-size:24px;
-  }
-
-  .macros-grid {
-    grid-template-columns:repeat(4, 1fr);
-    gap:8px;
-  }
-
-  .macro-circle {
-    width:60px;
-    height:60px;
-  }
-
-  .macro-value {
-    font-size:14px;
   }
 }
 
@@ -746,7 +410,7 @@ h1 {
 <section class="card">
 <div class="search-filter-row">
   <div class="search-container">
-    <input type="text" id="searchBar" placeholder=" Rechercher une recette..."/>
+    <input type="text" id="searchBar" placeholder="🔍 Rechercher une recette..."/>
   </div>
   <button class="filter-toggle-btn" id="filterToggle" onclick="toggleFilters()" aria-label="Filtres">
     <svg viewBox="0 0 24 24" fill="#333">
@@ -773,59 +437,15 @@ h1 {
 </main>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="recetteModal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <h2 class="modal-title" id="modalTitle"></h2>
-      <div class="modal-tags" id="modalTags"></div>
-      <img class="modal-image" id="modalImage" src="" alt="Recipe" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:20px;"/>
-    </div>
-
-    <div class="macros-grid" id="modalMacros"></div>
-
-    <div class="modal-tabs">
-      <button class="modal-tab active" onclick="switchTab('ingredients')">Ingrédients</button>
-      <button class="modal-tab" onclick="switchTab('instructions')">Instructions</button>
-    </div>
-
-    <div class="modal-body">
-      <div class="tab-content active" id="ingredientsTab"></div>
-      <div class="tab-content" id="instructionsTab"></div>
-    </div>
-  </div>
-</div>
-
 <script>
-let currentModalRecette = null;
 let activeFilters = {
   cuisine: null,
-  category: null,
-  type: null
+  category: null
 };
 let filtersVisible = false;
 
 const cuisineTypes = ['Française', 'Italienne', 'Asiatique', 'Mexicaine', 'Indienne', 'Méditerranéenne'];
 const categoryTypes = ['Entrée', 'Plat', 'Dessert', 'Boisson', 'Snack'];
-
-const ingredientIcons = {
-  'yaourt': '🥛', 'gingembre': '🧄', 'ail': '🧄', 'citron': '🍋', 'chaat': '🌶️', 
-  'cumin': '🌿', 'garam': '🌶️', 'piment': '🌶️', 'curcuma': '🌿', 'sel': '🧂', 
-  'huile': '🫒', 'yogurt': '🥛', 'pâte': '🧄', 'jus': '🍋', 'poudre': '🌿', 
-  'ghee': '🫒', 'poivre': '🌶️', 'sauce': '🥫', 'tomate': '🍅', 'oignon': '🧅',
-  'carotte': '🥕', 'poulet': '🍗', 'viande': '🥩', 'poisson': '🐟', 'oeuf': '🥚',
-  'fromage': '🧀', 'beurre': '🧈', 'lait': '🥛', 'crème': '🥛', 'riz': '🍚',
-  'pâtes': '🍝', 'pain': '🍞', 'farine': '🌾', 'sucre': '🍬', 'miel': '🍯'
-};
-
-function getIngredientIcon(ingredient) {
-  const lower = ingredient.toLowerCase();
-  for (const [key, icon] of Object.entries(ingredientIcons)) {
-    if (lower.includes(key)) return icon;
-  }
-  return '🥄';
-}
 
 function toggleFilters() {
   filtersVisible = !filtersVisible;
@@ -844,35 +464,6 @@ function toggleFilters() {
   }
 }
 
-function getFavList(){
-  try{
-    return JSON.parse(localStorage.getItem('sn_v2_fav_recipes')||'[]');
-  }catch(e){
-    return[];
-  }
-}
-
-function setFavList(arr){
-  try{
-    localStorage.setItem('sn_v2_fav_recipes',JSON.stringify(arr));
-  }catch(e){}
-}
-
-function isFav(nom){
-  return getFavList().includes(nom);
-}
-
-function toggleFav(nom){
-  let favs=getFavList();
-  if(favs.includes(nom)){
-    favs=favs.filter(f=>f!==nom);
-  }else{
-    favs.push(nom);
-  }
-  setFavList(favs);
-  renderRecettesList(currentPlats);
-}
-
 function filtreNonVeg(list){
   return list.filter(r=>
     !(r.categorie&&r.categorie.toLowerCase().includes("végétarien")||r.categorie.toLowerCase().includes("vegan"))&&
@@ -888,7 +479,7 @@ function renderFilters(){
   const cuisineBar = document.getElementById('cuisineFilters');
   const categoryBar = document.getElementById('categoryFilters');
   
-  cuisineBar.innerHTML = '<button class="filter-btn'+(activeFilters.cuisine===null?' active':'')+'" onclick="filterByCuisine(null)"> Toutes</button>';
+  cuisineBar.innerHTML = '<button class="filter-btn'+(activeFilters.cuisine===null?' active':'')+'" onclick="filterByCuisine(null)">🌍 Toutes</button>';
   cuisineTypes.forEach(cuisine => {
     cuisineBar.innerHTML += `<button class="filter-btn${activeFilters.cuisine===cuisine?' active':''}" onclick="filterByCuisine('${cuisine}')">${cuisine}</button>`;
   });
@@ -915,111 +506,20 @@ function filterByCategory(category){
 function renderSuggestions(plats){
   const carousel=document.getElementById('suggestionsCarousel');
   carousel.innerHTML='';
-  plats.slice(0,10).forEach(p=>{
+  plats.slice(0,10).forEach((p, index)=>{
     const card=document.createElement('div');
     card.className='suggestion-card';
-    card.onclick=()=>openRecetteModal(p.nom);
+    card.onclick=()=>goToDetail(index);
     card.innerHTML=`<img src="${p.image}" alt="${p.nom}"/><div class="suggestion-title">${p.nom}</div>`;
     carousel.appendChild(card);
   });
 }
 
-function drawCircle(value, max, color, label) {
-  const radius = 34;
-  const circumference = 2 * Math.PI * radius;
-  const percent = (value / max) * 100;
-  const offset = circumference - (percent / 100) * circumference;
-  
-  return `
-    <div class="macro-item">
-      <div class="macro-circle">
-        
-        </svg>
-        <div class="macro-value">
-          ${value}
-          <span class="macro-unit">${label === 'Kcal' ? '' : 'g'}</span>
-        </div>
-      </div>
-      <div class="macro-label">${label}</div>
-    </div>
-  `;
+function goToDetail(index) {
+  // Sauvegarder la recette dans sessionStorage
+  sessionStorage.setItem('currentRecette', JSON.stringify(currentPlats[index]));
+  window.location.href = 'detailplat.html';
 }
-
-function switchTab(tab) {
-  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  
-  event.target.classList.add('active');
-  document.getElementById(tab + 'Tab').classList.add('active');
-}
-
-function openRecetteModal(nom){
-  const recette=currentPlats.find(r=>r.nom===nom);
-  if(!recette)return;
-  
-  currentModalRecette = recette;
-  
-  document.getElementById('modalTitle').textContent=recette.nom;
-  document.getElementById('modalImage').src=recette.image;
-  
-  const tagsHtml = `
-    <span class="modal-tag tag-cuisine">🍽️ ${recette.type || 'Plat'}</span>
-    
-  `;
-  document.getElementById('modalTags').innerHTML = tagsHtml;
-  
-  // Macros circulaires avec valeurs correctes
-  const macros = recette.macros || {cal:320, p:30, c:20, f:15};
-  const macrosHtml = 
-    drawCircle(macros.cal, 400, '#4caf50', 'Kcal') +
-    drawCircle(macros.c, 50, '#ff9800', 'Glucides') +
-    drawCircle(macros.p, 50, '#2196f3', 'Protéines') +
-    drawCircle(macros.f, 30, '#f44336', 'Lipides');
-  
-  document.getElementById('modalMacros').innerHTML = macrosHtml;
-  
-  // Ingrédients
-  const ingredientsHtml = recette.ingredients.map(ing => {
-    const parts = ing.split('-');
-    const name = parts[0].trim();
-    const quantity = parts[1]?.trim() || '1 portion';
-    return `
-      <div class="ingredient-item">
-        <div class="ingredient-icon">${getIngredientIcon(name)}</div>
-        <div class="ingredient-info">
-          <div class="ingredient-name">${name}</div>
-        </div>
-        <div class="ingredient-quantity">${quantity}</div>
-      </div>
-    `;
-  }).join('');
-  document.getElementById('ingredientsTab').innerHTML = ingredientsHtml;
-  
-  // Instructions
-  const instructionsHtml = recette.etapes.map((step, i) => `
-    <div class="instruction-item">
-      <div class="instruction-header">
-        <div class="instruction-number">${i + 1}</div>
-        <div class="instruction-text">${step}</div>
-      </div>
-    </div>
-  `).join('');
-  document.getElementById('instructionsTab').innerHTML = instructionsHtml;
-  
-  document.getElementById('recetteModal').classList.add('active');
-  document.body.style.overflow='hidden';
-}
-
-function closeModal(){
-  document.getElementById('recetteModal').classList.remove('active');
-  document.body.style.overflow='';
-  currentModalRecette=null;
-}
-
-// Fermer modal en cliquant sur l'overlay
-document.getElementById('recetteModal').addEventListener('click',(e)=>{
-  if(e.target.id==='recetteModal')closeModal();
-});
 
 function renderRecettesList(list){
   const plats=filtreNonVeg(list);
@@ -1030,61 +530,9 @@ function renderRecettesList(list){
   
   let filtered=plats;
   
-  // Appliquer filtres
-  if(activeFilters.type) filtered=filtered.filter(r=>r.type===activeFilters.type);
   if(activeFilters.cuisine) filtered=filtered.filter(r=>r.cuisine===activeFilters.cuisine);
   if(activeFilters.category) filtered=filtered.filter(r=>r.categorie.includes(activeFilters.category));
   if(searchTerm) filtered=filtered.filter(r=>r.nom.toLowerCase().includes(searchTerm));
   
-  filtered.forEach(recette=>{
-    const macros=recette.macros?`${recette.macros.cal}kcal • ${recette.macros.p}g P • ${recette.macros.c}g G • ${recette.macros.f}g L`:'';
-    
-    const card=document.createElement('div');
-    card.className='recette-card';
-    card.onclick=()=>openRecetteModal(recette.nom);
-    card.innerHTML=`
-      <div class="recette-img-container">
-        <img src="${recette.image}" alt="${recette.nom}" class="recette-img" loading="lazy"/>
-        <div class="recipe-badge">${recette.categorie}</div>
-      </div>
-      <div class="recette-content">
-        <div class="recette-title">${recette.nom}</div>
-        ${recette.temps?`<div style="font-size:13px;color:#666;margin-bottom:8px">⏱ ${recette.temps} Min • 👤 1 pers</div>`:''}
-        <div class="recette-macros">${macros}</div>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-  
-  renderSuggestions(filtered);
-}
-
-// Recherche
-document.getElementById('searchBar').addEventListener('input',()=>renderRecettesList(currentPlats));
-
-// Chargement JSON
-document.getElementById('recettesList').style.display='none';
-document.getElementById('loader').style.display='block';
-
-fetch('recettes.json')
-  .then(resp=>resp.json())
-  .then(data=>{
-    const recettes=filtreNonVeg(data);
-    currentPlats=recettes;
-    
-    renderFilters();
-    renderRecettesList(recettes);
-    
-    document.getElementById('recettesList').style.display='';
-    document.getElementById('loader').style.display='none';
-  })
-  .catch(()=>{
-    document.getElementById('loader').style.display='none';
-    document.getElementById('recettesList').style.display='';
-    document.getElementById('recettesList').innerHTML="<div style='color:var(--danger);text-align:center;font-size:1.2em;padding:40px 20px;'>❌ Impossible de charger les recettes.</div>";
-  });
-</script>
-</body>
-</html>
-
-
+  filtered.forEach((recette, index)=>{
+    const macros=recette.macros?
