@@ -484,27 +484,7 @@ h1 {
 }
 
 .modal-tags {
-  display:flex;
-  gap:8px;
-  margin-bottom:16px;
-  flex-wrap:wrap;
-}
-
-.modal-tag {
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:600;
-}
-
-.tag-cuisine {
-  background:#e3f2fd;
-  color:#1976d2;
-}
-
-.tag-category {
-  background:#fff3e0;
-  color:#f57c00;
+  display:none;
 }
 
 .modal-rating {
@@ -513,10 +493,10 @@ h1 {
 
 .macros-grid {
   display:flex;
-  justify-content:space-between;
-  gap:4px;
+  justify-content:space-around;
+  gap:16px;
   margin-bottom:24px;
-  padding:0 4px;
+  padding:0 16px;
 }
 
 .macro-item {
@@ -524,42 +504,26 @@ h1 {
   flex:1;
 }
 
-.macro-circle {
-  width:70px;
-  height:70px;
-  margin:0 auto 8px;
-  position:relative;
-}
-
-.macro-circle svg {
-  transform:rotate(-90deg);
-  width:70px;
-  height:70px;
-}
-
 .macro-value {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  font-size:15px;
-  font-weight:700;
+  font-size:24px;
+  font-weight:800;
   color:#1a1a1a;
-  line-height:1.2;
-  text-align:center;
+  line-height:1;
+  margin-bottom:6px;
 }
 
 .macro-unit {
-  font-size:10px;
-  font-weight:500;
-  display:block;
-  margin-top:2px;
+  font-size:12px;
+  font-weight:600;
+  color:#666;
+  display:inline;
+  margin-left:2px;
 }
 
 .macro-label {
-  font-size:11px;
-  color:#666;
-  font-weight:600;
+  font-size:12px;
+  color:#999;
+  font-weight:500;
 }
 
 .modal-tabs {
@@ -677,7 +641,7 @@ h1 {
 }
 
 /* iPhone et mobile */
-@media (max-width:768px) {
+  @media (max-width:768px) {
   .app {
     padding:0 12px;
     margin:12px 0;
@@ -707,17 +671,17 @@ h1 {
   }
 
   .macros-grid {
-    grid-template-columns:repeat(4, 1fr);
-    gap:8px;
-  }
-
-  .macro-circle {
-    width:60px;
-    height:60px;
+    justify-content:space-around;
+    gap:12px;
+    padding:0 12px;
   }
 
   .macro-value {
-    font-size:14px;
+    font-size:22px;
+  }
+
+  .macro-label {
+    font-size:11px;
   }
 }
 
@@ -780,7 +744,6 @@ h1 {
     <div class="modal-header">
       <button class="modal-close" onclick="closeModal()">×</button>
       <h2 class="modal-title" id="modalTitle"></h2>
-      <div class="modal-tags" id="modalTags"></div>
       <img class="modal-image" id="modalImage" src="" alt="Recipe" style="width:100%;height:220px;object-fit:cover;border-radius:16px;margin-bottom:20px;"/>
     </div>
 
@@ -925,24 +888,11 @@ function renderSuggestions(plats){
   });
 }
 
-function drawCircle(value, max, color, label) {
-  const radius = 34;
-  const circumference = 2 * Math.PI * radius;
-  const percent = (value / max) * 100;
-  const offset = circumference - (percent / 100) * circumference;
-  
+function drawMacro(value, unit, label, color) {
   return `
     <div class="macro-item">
-      <div class="macro-circle">
-        <svg width="80" height="80">
-          <circle cx="40" cy="40" r="${radius}" fill="none" stroke="#f0f0f0" stroke-width="8"/>
-          <circle cx="40" cy="40" r="${radius}" fill="none" stroke="${color}" stroke-width="8" 
-            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
-        </svg>
-        <div class="macro-value">
-          ${value}
-          <span class="macro-unit">${label === 'Kcal' ? '' : 'g'}</span>
-        </div>
+      <div class="macro-value" style="color:${color}">
+        ${value}<span class="macro-unit">${unit}</span>
       </div>
       <div class="macro-label">${label}</div>
     </div>
