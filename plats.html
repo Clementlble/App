@@ -516,8 +516,9 @@ function renderSuggestions(plats){
 }
 
 function goToDetail(index) {
-  // Sauvegarder la recette dans sessionStorage
+  // Sauvegarder la recette et toutes les recettes dans sessionStorage
   sessionStorage.setItem('currentRecette', JSON.stringify(currentPlats[index]));
+  sessionStorage.setItem('allRecettes', JSON.stringify(currentPlats));
   window.location.href = 'detailplat.html';
 }
 
@@ -534,5 +535,57 @@ function renderRecettesList(list){
   if(activeFilters.category) filtered=filtered.filter(r=>r.categorie.includes(activeFilters.category));
   if(searchTerm) filtered=filtered.filter(r=>r.nom.toLowerCase().includes(searchTerm));
   
-  filtered.forEach((recette, index)=>{
-    const macros=recette.macros?
+  filtered.forEach((recette)=>{
+    const macros=recette.macros?`${recette.macros.cal}kcal • ${recette.macros.p}g P • ${recette.macros.c}g G • ${recette.macros.f}g L`:'';
+    
+    const originalIndex = plats.indexOf(recette);
+    
+    const card=document.createElement('a');
+    card.className='recette-card';
+    card.href='#';
+    card.onclick=(e)=>{
+      e.preventDefault();
+      goToDetail(originalIndex);
+    };
+    card.innerHTML=`
+      <div class="recette-img-container">
+        <img src="${recette.image}" alt="${recette.nom}" class="recette-img" loading="lazy"/>
+        <div class="recipe-badge">${recette.categorie}</div>
+      </div>
+      <div class="recette-content">
+        <div class="recette-title">${recette.nom}</div>
+        ${recette.temps?`<div style="font-size:13px;color:#666;margin-bottom:8px">⏱ ${recette.temps} Min • 👤 1 pers</div>`:''}
+        <div class="recette-macros">${macros}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+  
+  renderSuggestions(filtered);
+}
+
+document.getElementById('searchBar').addEventListener('input',()=>renderRecettesList(currentPlats));
+
+document.getElementById('recettesList').style.display='none';
+document.getElementById('loader').style.display='block';
+
+fetch('recettes.json')
+  .then(resp=>resp.json())
+  .then(data=>{
+    const recettes=filtreNonVeg(data);
+    currentPlats=recettes;
+    
+    renderFilters();
+    renderRecettesList(recettes);
+    
+    document.getElementById('recettesList').style.display='';
+    document.getElementById('loader').style.display='none';
+  })
+  .catch(()=>{
+    document.getElementById('loader').style.display='none';
+    document.getElementById('recettesList').style.display='';
+    document.getElementById('recettesList').innerHTML="<div style='color:#e74c3c;text-align:center;font-size:1.2em;padding:40px 20px;'>❌ Impossible de charger les recettes.</div>";
+  });
+</script>
+</body>
+</html>
