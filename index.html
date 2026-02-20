@@ -76,6 +76,70 @@
 
         .nav-links a:hover { color: var(--ink); }
 
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px; height: 2px;
+            background: var(--ink);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 68px; left: 0; right: 0;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 6vw 32px;
+            z-index: 99;
+            flex-direction: column;
+        }
+
+        .mobile-menu.open { display: flex; }
+
+        .mobile-menu a {
+            display: block;
+            padding: 16px 0;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.2s;
+        }
+
+        .mobile-menu a:last-of-type { border-bottom: none; }
+        .mobile-menu a:hover { color: var(--coral); }
+
+        .mobile-menu .mob-cta {
+            margin-top: 20px;
+            background: var(--coral);
+            color: white !important;
+            text-align: center;
+            padding: 16px !important;
+            border-radius: 100px;
+            font-weight: 600 !important;
+            border-bottom: none !important;
+        }
+
+        .mobile-menu .mob-cta:hover { background: #e54535; color: white !important; }
+
         .nav-cta {
             background: var(--ink);
             color: white;
@@ -237,7 +301,7 @@
 
         .phone-mock {
             border: 0px solid #1C1C1E;
-            border-radius: 20px;
+            border-radius: 44px;
             overflow: hidden;
             flex-shrink: 0;
             box-shadow:
@@ -1137,6 +1201,59 @@
             .pm-far-left, .pm-far-right { display: none; }
             .pm-left, .pm-right { display: none; }
             .nav-links { display: none; }
+            #nav-cta-desktop { display: none; }
+            .hamburger { display: flex; }
+
+            /* Hero mobile */
+            .hero { padding: 100px 6vw 60px; }
+            .hero h1 { font-size: 2.8rem; }
+            .hero-sub { font-size: 0.95rem; }
+            .hero-actions { flex-direction: column; align-items: center; }
+            .btn-coral, .btn-outline { width: 100%; text-align: center; justify-content: center; }
+            .hero-trust { flex-wrap: wrap; justify-content: center; gap: 12px; }
+            .hero-divider { display: none; }
+            .phones-container { margin-top: 48px; }
+            .pm-main { width: 200px; }
+
+            /* Sections mobile */
+            .section-pad { padding: 72px 0; }
+            .section-h2 { font-size: 1.8rem; }
+            .bento { gap: 12px; }
+            .bc { padding: 28px; border-radius: 20px; }
+
+            /* Performance split */
+            #performance .section-wrap > div { grid-template-columns: 1fr !important; gap: 40px; }
+
+            /* Steps mobile */
+            .steps { grid-template-columns: 1fr; }
+            .step { padding: 0 0 40px; text-align: left; display: flex; gap: 20px; align-items: flex-start; }
+            .step-circle { margin: 0; flex-shrink: 0; width: 44px; height: 44px; }
+
+            /* Stats row mobile */
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .stat-cell { padding: 28px 20px; }
+            .stat-big { font-size: 2.2rem; }
+
+            /* Footer mobile */
+            .footer-main { grid-template-columns: 1fr; gap: 32px; padding: 48px 6vw 32px; }
+            .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+
+            /* Final CTA mobile */
+            .final-cta { padding: 80px 6vw; }
+            .final-cta h2 { font-size: 2.4rem; }
+            .final-trust { flex-direction: column; align-items: center; gap: 14px; }
+
+            /* Big marquee mobile */
+            .big-marquee-item { font-size: 2.5rem; padding: 16px 24px; }
+
+            /* Compare table mobile */
+            .ct-cell { padding: 14px 16px; font-size: 0.75rem; }
+
+            /* Pricing mobile */
+            .price-card.featured { order: -1; }
+
+            /* Testimonials */
+            .testimonials { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -1145,8 +1262,7 @@
 <!-- NAV -->
 <nav>
     <a href="#" class="nav-logo">
-        <div class="bolt"><i class="fas fa-bolt"></i></div>
-        Stenvo
+        <img src="Icon.png" alt="Stenvo" style="height:42px; width:auto; display:block;">
     </a>
     <ul class="nav-links">
         <li><a href="#fonctionnalites">Fonctionnalités</a></li>
@@ -1155,8 +1271,21 @@
         <li><a href="#tarifs">Tarifs</a></li>
         <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a href="https://fitsync-v2.vercel.app/" class="nav-cta">Essayer gratuitement →</a>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </button>
+    <a href="https://fitsync-v2.vercel.app/" class="nav-cta" id="nav-cta-desktop">Essayer gratuitement →</a>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="#fonctionnalites" onclick="closeMenu()">Fonctionnalités</a>
+    <a href="#systeme" onclick="closeMenu()">Le Système</a>
+    <a href="#performance" onclick="closeMenu()">Performance</a>
+    <a href="#tarifs" onclick="closeMenu()">Tarifs</a>
+    <a href="#faq" onclick="closeMenu()">FAQ</a>
+    <a href="https://fitsync-v2.vercel.app/" class="mob-cta">Essayer gratuitement →</a>
+</div>
 
 <!-- ══════════════════════════════════════
      HERO
@@ -1916,6 +2045,26 @@
 </footer>
 
 <script>
+    // Hamburger menu
+    function toggleMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const burger = document.getElementById('hamburger');
+        menu.classList.toggle('open');
+        burger.classList.toggle('open');
+    }
+
+    function closeMenu() {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.getElementById('hamburger').classList.remove('open');
+    }
+
+    // Close menu on outside click
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('mobileMenu');
+        const burger = document.getElementById('hamburger');
+        if (!menu.contains(e.target) && !burger.contains(e.target)) closeMenu();
+    });
+
     // Scroll reveal
     const obs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
@@ -1956,4 +2105,3 @@
 </script>
 </body>
 </html>
-
